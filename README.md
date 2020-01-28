@@ -3,10 +3,10 @@
 ## Installation
 
 1) Move all files from *.vscode* folder to your project *.vscode* folder (replace *tasks.json*)
-2) Run ```npm i selenium-webdriver chromedriver``` to install packages
+2) Run `npm i selenium-webdriver chromedriver -g` to install packages
 3) Move *keybindings.json* to *C:\Users\%USER_NAME%\AppData\Roaming\Code\User* to configurate VsCode keybindings
 4) Rename *.vscode/gitignore* to *.vscode/.gitignore* to hide new scripts for git
-5) Run ```git update-index --skip-worktree .vscode/tasks.json``` to hide tracking *tasks.json* file for git
+5) Run `git update-index --skip-worktree .vscode/tasks.json` to hide tracking *tasks.json* file for git
 6) Configurate .vscode/env.js for pull request opening automation
 
 ## Usage
