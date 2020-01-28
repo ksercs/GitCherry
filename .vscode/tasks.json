@@ -1,0 +1,69 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "npm run build",
+      "type": "shell",
+      "command": "npm",
+      "args": [ "run", "build" ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "commit",
+      "type": "shell",
+      "command": "git commit -m \"${input:msg}\""
+    },
+    {
+      "label": "push",
+      "type": "shell",
+      "command": "git push origin HEAD"
+    },
+    {
+      "label": "create a branch",
+      "type": "shell",
+      "command": "./.vscode/new_branch.sh 20_1 ${input:branch_name} ${input:install}"
+    },
+    {
+      "label": "PR",
+      "type": "shell",
+      "command": "./.vscode/open_PR.sh"
+    },
+    {
+      "label": "npm run test-env",
+      "type": "shell",
+      "command": "npm run test-env",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "gulp dev",
+      "type": "shell",
+      "command": "gulp dev",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "graft",
+      "type": "shell",
+      "command": "./.vscode/cherry_pick.sh"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "msg",
+      "description": "type commit message",
+      "type": "promptString"
+    }, {
+      "id": "branch_name",
+      "description": "type branch name",
+      "type": "promptString"
+    }, {
+      "id": "install",
+      "description": "pick '-i' if you wanna intall packages",
+      "options": ["-i", ""],
+      "default": "",
+      "type": "pickString"
+    }
+]
+}
