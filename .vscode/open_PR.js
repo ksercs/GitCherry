@@ -80,7 +80,6 @@ async function openPullRequest(branchName) {
 
         await (await getElement(driver, CREATE_PR_BUTTON)).click();
     } finally {
-        await driver.sleep(50000);
         await driver.quit();
     }
 }
