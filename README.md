@@ -2,12 +2,17 @@
 
 ## Installation
 
-1) Move all files from *.vscode* folder to your project *.vscode* folder (replace *tasks.json*)
-2) Run `npm i selenium-webdriver chromedriver -g` to install packages
-3) Move *keybindings.json* to *C:\Users\%USER_NAME%\AppData\Roaming\Code\User* to configurate VsCode keybindings
-4) Rename *.vscode/gitignore* to *.vscode/.gitignore* to hide new scripts for git
-5) Run `git update-index --skip-worktree .vscode/tasks.json` to hide tracking *tasks.json* file for git
-6) Configurate .vscode/env.js for pull request opening automation
+1) *Project tasks configurating*\
+Move all files from *.vscode* folder to your project *.vscode* folder (replace *tasks.json*)
+2) *Selenium installing*\
+Run `npm i selenium-webdriver chromedriver -g` to install packages
+3) *VS Code keybindings configurating*\
+Open *File -> Preferences -> Keyboard ShortCuts* in VS Code. Open it as a json - click on the icon in the top right corner of the editor ("Open Keyboard ShortCuts (JSON)"). Replace shortcuts file text with the text of *keybindings.json* file.
+4) *Hiding new scripts for git*
+- Rename *.vscode/gitignore* to *.vscode/.gitignore*
+- Run `git update-index --skip-worktree .vscode/tasks.json` to hide tracking *tasks.json* file for git
+5) *Pull request opening automation*\
+Configurate .vscode/env.js for pull request opening automation
 
 ## Usage
 
