@@ -9,19 +9,15 @@
 	"categories": [
 		"Other"
 	],
-	"activationEvents": [ "onView:exampleView", "onView:exampleView2" ],
+	"activationEvents": [ "onView:exampleView" ],
 	"main": "./out/extension.js",
-    "contributes": {
+	"contributes": {
 		"viewsContainers": {
 			"activitybar": [
 				{
 					"id": "test",
 					"title": "test",
-					"icon": "./src/checked.jpg"
-				}, {
-					"id": "test2",
-					"title": "test2",
-					"icon": "./src/checked.jpg"
+					"icon": "resources/dark/checked.svg"
 				}
 			]
 		},
@@ -31,14 +27,34 @@
                     "id": "exampleView",
                     "name": "exampleView"
                 }
-			],
-			"test2": [
-                {
-                    "id": "exampleView2",
-                    "name": "exampleView2"
-                }
 			]
-        }
+		},
+		"commands": [{
+			"command": "start",
+			"title": "Create pull requests",
+			"icon": {
+				"light": "resources/light/start.svg",
+				"dark": "resources/dark/start.svg"
+			}
+		}, {
+			"command": "continue",
+			"title": "Continue",
+			"icon": {
+				"light": "resources/light/continue.svg",
+				"dark": "resources/dark/continue.svg"
+			}
+		}],
+		"menus": {
+			"view/title": [{
+				"command": "start",
+				"group": "navigation",
+				"when": "view == exampleView"
+			}, {
+				"command": "continue",
+				"group": "navigation",
+				"when": "view == exampleView"
+			}]
+		}
     },
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
