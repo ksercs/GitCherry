@@ -15,8 +15,8 @@ class TreeDataProvider implements vscode.TreeDataProvider<ExtendedTreeItem> {
       this.getLabelsTree()
     ])];
 
-		vscode.commands.registerCommand('treeView.selectTreeItem', (element) => this.onItemClicked(element));
-		vscode.commands.registerCommand('start', () => this.onStart());
+    vscode.commands.registerCommand('treeView.selectTreeItem', (element) => this.onItemClicked(element));
+    vscode.commands.registerCommand('start', () => this.onStart());
   }
 
   onStart() {
