@@ -52,7 +52,8 @@ export class TreeDataProvider implements vscode.TreeDataProvider<ExtendedTreeIte
 
   async getChildren(element?: ExtendedTreeItem|undefined): Promise<ExtendedTreeItem[]|undefined> {
     if (element === undefined) {
-      return Promise.resolve(this.tree = await TreeCreator.createTree());
+      this.tree = await TreeCreator.createTree();
+      return Promise.resolve(this.tree);
     }
     return Promise.resolve(element.children);
   }
