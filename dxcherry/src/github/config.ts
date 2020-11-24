@@ -13,11 +13,16 @@ const throwIfNot = <T, K extends keyof T>(obj: Partial<T>, prop: K): T[K] => {
     }
 };
 
-['AUTH_TOKEN', 'USER_AGENT'].forEach(v => {
+['AUTH_TOKEN', 'USER_AGENT', 'REPO_OWNER', 'REPO_NAME'].forEach(v => {
     throwIfNot(process.env, v)
 });
 
 export const GITHUB_USER = {
-    auth: process.env.AUTH_TOKEN,
-    userAgent: process.env.USER_AGENT
+    auth: process.env.AUTH_TOKEN as string,
+    userAgent: process.env.USER_AGENT as string
+};
+
+export const REPO_DATA = {
+    owner: process.env.REPO_OWNER as string,
+    repo: process.env.REPO_NAME as string
 };

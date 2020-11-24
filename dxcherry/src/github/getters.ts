@@ -1,11 +1,7 @@
 import { OctokitResponse } from '@octokit/types';
 import { GetResponseDataType, LabelsDataType, ReviewersDataType, BranchesDataType } from './types';
 import { client } from './createClient';
-
-const REPO_DATA = {
-    owner: 'DevExpress',
-    repo: 'DevExtreme'
-};
+import { REPO_DATA } from './config';
 
 function getData(res: OctokitResponse<GetResponseDataType>): GetResponseDataType {
     return res.data;
