@@ -3,7 +3,6 @@ import * as vscode from 'vscode';
 import { ExtendedTreeItem, REVIEWERS_ROOT_LABEL, LABELS_ROOT_LABEL, VERSION_ROOT_LABEL } from './treeItem';
 import { TreeCreator } from './treeCreator';
 
-
 export class TreeDataProvider implements vscode.TreeDataProvider<ExtendedTreeItem> {
   tree!: ExtendedTreeItem[];
 
