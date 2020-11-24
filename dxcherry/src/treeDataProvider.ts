@@ -1,18 +1,13 @@
-import { EventEmitter, commands } from 'vscode';
+import { EventEmitter, Event, commands } from 'vscode';
 import * as vscode from 'vscode';
 import { ExtendedTreeItem, REVIEWERS_ROOT_LABEL, LABELS_ROOT_LABEL, VERSION_ROOT_LABEL } from './treeItem';
 import { TreeCreator } from './treeCreator';
 
+
 export class TreeDataProvider implements vscode.TreeDataProvider<ExtendedTreeItem> {
-  data: ExtendedTreeItem[];
+  tree!: ExtendedTreeItem[];
 
   constructor() {
-    this.data = [new ExtendedTreeItem('Pull request settings', [
-      TreeCreator.createVersionsTree(),
-      TreeCreator.createReviewersTree(),
-      TreeCreator.createLabelsTree(),
-    ])];
-
     commands.registerCommand('treeView.selectTreeItem', (element) => this.onItemClicked(element));
   }
 
@@ -34,7 +29,7 @@ export class TreeDataProvider implements vscode.TreeDataProvider<ExtendedTreeIte
   }
 
   getTree(label: string): ExtendedTreeItem | undefined {
-    return this.data[0].children?.find(child => child.label === label);
+    return this.tree[0].children?.find(child => child.label === label);
   }
 
   getTreeItem(element: ExtendedTreeItem): ExtendedTreeItem|Thenable<ExtendedTreeItem> {
@@ -56,10 +51,10 @@ export class TreeDataProvider implements vscode.TreeDataProvider<ExtendedTreeIte
     this.refresh(element);
   }
 
-  getChildren(element?: ExtendedTreeItem|undefined): vscode.ProviderResult<ExtendedTreeItem[]> {
+  async getChildren(element?: ExtendedTreeItem|undefined): Promise<ExtendedTreeItem[]|undefined> {
     if (element === undefined) {
-      return this.data;
+      return Promise.resolve(this.tree = await TreeCreator.createTree());
     }
-    return element.children;
+    return Promise.resolve(element.children);
   }
 }
