@@ -1,5 +1,6 @@
 import { ExtendedTreeItem, REVIEWERS_ROOT_LABEL, LABELS_ROOT_LABEL, VERSION_ROOT_LABEL } from './treeItem';
 import { getLabels, getBranches, getReviewers } from './github/getters';
+import { setNames } from './reviewersData/setNames';
 
 export class TreeCreator {
   private static createTreeItem(rootLabel: string, data: Array<any>, nameKey: string = 'name'): ExtendedTreeItem {
@@ -16,6 +17,7 @@ export class TreeCreator {
 
   private static async createReviewersTree(): Promise<ExtendedTreeItem> {
     const reviewers = await getReviewers();
+    await setNames(reviewers);
 
     return this.createTreeItem(REVIEWERS_ROOT_LABEL, reviewers, 'login');
   }
