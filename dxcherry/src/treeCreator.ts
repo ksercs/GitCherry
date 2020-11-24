@@ -1,33 +1,36 @@
 import { ExtendedTreeItem, REVIEWERS_ROOT_LABEL, LABELS_ROOT_LABEL, VERSION_ROOT_LABEL } from './treeItem';
+import { getLabels, getBranches, getReviewers } from './github/getters';
 
 export class TreeCreator {
-  // get children from server instead of hardcode values
-  static createReviewersTree(): ExtendedTreeItem {
-    return new ExtendedTreeItem(REVIEWERS_ROOT_LABEL, [
-      new ExtendedTreeItem('ksercs'),
-      new ExtendedTreeItem('jtoming830')
+  private static createTreeItem(rootLabel: string, data: Array<any>, nameKey: string = 'name'): ExtendedTreeItem {
+    return new ExtendedTreeItem(rootLabel, [
+      ...data.map(item => new ExtendedTreeItem(item[nameKey]))
     ]);
+  } 
+
+  private static async createLabelsTree(): Promise<ExtendedTreeItem> {
+    const labels = await getLabels();
+
+    return this.createTreeItem(LABELS_ROOT_LABEL, labels);
   }
 
-  // get children from server instead of hardcode values
-  static createLabelsTree(): ExtendedTreeItem {
-    return new ExtendedTreeItem(LABELS_ROOT_LABEL, [
-      new ExtendedTreeItem('bug'),
-      new ExtendedTreeItem('wontfix'),
-      new ExtendedTreeItem('invalid'),
-      new ExtendedTreeItem('question'),
-      new ExtendedTreeItem('duplicate')
-    ]);
+  private static async createReviewersTree(): Promise<ExtendedTreeItem> {
+    const reviewers = await getReviewers();
+
+    return this.createTreeItem(REVIEWERS_ROOT_LABEL, reviewers, 'login');
   }
 
-  // get children from server instead of hardcode values
-  static createVersionsTree(): ExtendedTreeItem {
-    return new ExtendedTreeItem(VERSION_ROOT_LABEL, [
-      new ExtendedTreeItem('21_1'),
-      new ExtendedTreeItem('20_2'),
-      new ExtendedTreeItem('20_1'),
-      new ExtendedTreeItem('19_2'),
-      new ExtendedTreeItem('19_1'),
-    ]);
+  private static async createBranchesTree(): Promise<ExtendedTreeItem> {
+    const branches = await getBranches();
+
+    return this.createTreeItem(VERSION_ROOT_LABEL, branches);
+  }
+
+  static async createTree(): Promise<ExtendedTreeItem[]> {
+    return [new ExtendedTreeItem('Pull request settings', [
+      await TreeCreator.createBranchesTree(),
+      await TreeCreator.createLabelsTree(),
+      await TreeCreator.createReviewersTree(),
+    ])];
   }
 }
