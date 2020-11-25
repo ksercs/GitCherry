@@ -16,8 +16,8 @@ type BranchesDataType = GetResponseDataTypeFromEndpointMethod<
 type GetResponseDataType = LabelsDataType | ReviewersDataType | BranchesDataType;
 
 export {
-    LabelsDataType,
-    ReviewersDataType,
-    BranchesDataType,
-    GetResponseDataType
-}
+  LabelsDataType,
+  ReviewersDataType,
+  BranchesDataType,
+  GetResponseDataType
+};

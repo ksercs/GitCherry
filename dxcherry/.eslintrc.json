@@ -1,19 +1,20 @@
 {
-    "root": true,
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": [
+        "standard"
+    ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "ecmaVersion": 6,
+        "ecmaVersion": 12,
         "sourceType": "module"
     },
     "plugins": [
         "@typescript-eslint"
     ],
     "rules": {
-        "@typescript-eslint/naming-convention": "warn",
-        "@typescript-eslint/semi": "warn",
-        "curly": "warn",
-        "eqeqeq": "warn",
-        "no-throw-literal": "warn",
-        "semi": "off"
+        "semi": ["error", "always"]
     }
 }

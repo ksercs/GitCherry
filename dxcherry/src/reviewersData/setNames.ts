@@ -1,17 +1,23 @@
 import axios from 'axios';
 import { REVIEWER_DATA } from '../github/config';
+import { ReviewersDataType } from '../github/types';
+interface Reviewer {
+  l: string,
+  f: string,
+  gh: string,
+}
 
-export async function setNames(githubNames : Array<any>): Promise<any> {
-    const response = await axios(REVIEWER_DATA.url as string);
-    const data = response.data;
+export async function setNames (reviewers : ReviewersDataType): Promise<any> {
+  const response = await axios(REVIEWER_DATA.url as string);
+  const data = response.data as Array<Reviewer>;
 
-    githubNames.forEach((githubName: any) => {
-        const userData = data.find((el: any) => el.gh === githubName.login);
+  reviewers.forEach(reviewer => {
+    const reviewerData = data.find(el => el.gh === reviewer.login);
 
-        if(!userData) {
-            return;
-        }
+    if (!reviewerData) {
+      return;
+    }
 
-        githubName.login = `${userData.l} ${userData.f} (${githubName.login})`;
-    });
+    reviewer.login = `${reviewerData.l} ${reviewerData.f} (${reviewer.login})`;
+  });
 }

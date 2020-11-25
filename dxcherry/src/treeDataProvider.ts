@@ -6,34 +6,35 @@ import { TreeCreator } from './treeCreator';
 export class TreeDataProvider implements vscode.TreeDataProvider<ExtendedTreeItem> {
   tree!: ExtendedTreeItem[];
 
-  constructor() {
+  constructor () {
     commands.registerCommand('treeView.selectTreeItem', (element) => this.onItemClicked(element));
   }
 
-  getSelectedVersions(): Array<string | undefined> {
+  getSelectedVersions (): Array<string | undefined> {
     return this.getSelectedByRootLabel(VERSION_ROOT_LABEL);
   }
 
-  getSelectedReviewers(): Array<string | undefined> {
+  getSelectedReviewers (): Array<string | undefined> {
     return this.getSelectedByRootLabel(REVIEWERS_ROOT_LABEL);
   }
 
-  getSelectedLabels(): Array<string | undefined> {
+  getSelectedLabels (): Array<string | undefined> {
     return this.getSelectedByRootLabel(LABELS_ROOT_LABEL);
   }
 
-  getSelectedByRootLabel(rootLabel: string): Array<string | undefined> {
+  getSelectedByRootLabel (rootLabel: string): Array<string | undefined> {
     const root = this.getTree(rootLabel);
     return root?.getSelectedChildrenLabelsArray() || [];
   }
 
-  getTree(label: string): ExtendedTreeItem | undefined {
+  getTree (label: string): ExtendedTreeItem | undefined {
     return this.tree[0].children?.find(child => child.label === label);
   }
 
-  getTreeItem(element: ExtendedTreeItem): ExtendedTreeItem|Thenable<ExtendedTreeItem> {
+  // eslint-disable-next-line no-undef
+  getTreeItem (element: ExtendedTreeItem): ExtendedTreeItem|Thenable<ExtendedTreeItem> {
     element.setIcon();
-    element.command = { command: 'treeView.selectTreeItem', title: "Select item", arguments: [element], };
+    element.command = { command: 'treeView.selectTreeItem', title: 'Select item', arguments: [element] };
     return element;
   }
 
@@ -41,16 +42,16 @@ export class TreeDataProvider implements vscode.TreeDataProvider<ExtendedTreeIte
 
   readonly onDidChangeTreeData: Event<ExtendedTreeItem | null> = this._onDidChangeTreeData.event;
 
-  refresh(element: ExtendedTreeItem | null): void {
+  refresh (element: ExtendedTreeItem | null): void {
     this._onDidChangeTreeData.fire(element);
   }
 
-  onItemClicked(element: ExtendedTreeItem) {
+  onItemClicked (element: ExtendedTreeItem) {
     element.selected = !element.selected;
     this.refresh(element);
   }
 
-  async getChildren(element?: ExtendedTreeItem|undefined): Promise<ExtendedTreeItem[]|undefined> {
+  async getChildren (element?: ExtendedTreeItem|undefined): Promise<ExtendedTreeItem[]|undefined> {
     if (element === undefined) {
       this.tree = await TreeCreator.createTree();
       return Promise.resolve(this.tree);
