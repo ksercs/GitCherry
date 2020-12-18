@@ -41,11 +41,11 @@
 				}
 			},
 			{
-				"command": "continue",
-				"title": "Continue",
+				"command": "refresh",
+				"title": "Refresh",
 				"icon": {
-					"light": "resources/light/continue.svg",
-					"dark": "resources/dark/continue.svg"
+					"light": "resources/light/refresh.svg",
+					"dark": "resources/dark/refresh.svg"
 				}
 			}
 		],
@@ -57,7 +57,7 @@
 					"when": "view == exampleView"
 				},
 				{
-					"command": "continue",
+					"command": "refresh",
 					"group": "navigation",
 					"when": "view == exampleView"
 				}

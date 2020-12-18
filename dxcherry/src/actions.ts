@@ -1,5 +1,6 @@
 import { payloadGetter } from './payloadGetter';
 import { TreeDataProvider } from './treeDataProvider';
+import TreeCreator from './treeCreator';
 import { window } from 'vscode';
 
 export class Action {
@@ -18,9 +19,13 @@ export class Action {
       } else {
         payload.description = titleInput.value;
         titleInput.dispose();
-        // pass payload to the next step/action
       }
     });
     titleInput.show();
+  }
+
+  static async onRefresh (treeDataProvider: TreeDataProvider) {
+    treeDataProvider.tree = await TreeCreator.createTree(true);
+    treeDataProvider.refresh();
   }
 }

@@ -13,11 +13,16 @@ type BranchesDataType = GetResponseDataTypeFromEndpointMethod<
   typeof client.repos.listBranches
 >;
 
-type GetResponseDataType = LabelsDataType | ReviewersDataType | BranchesDataType;
+type UserDataType = GetResponseDataTypeFromEndpointMethod<
+  typeof client.users.getAuthenticated
+>;
+
+type GetResponseDataType = LabelsDataType | ReviewersDataType | BranchesDataType | UserDataType;
 
 export {
   LabelsDataType,
   ReviewersDataType,
   BranchesDataType,
-  GetResponseDataType
+  GetResponseDataType,
+  UserDataType
 };

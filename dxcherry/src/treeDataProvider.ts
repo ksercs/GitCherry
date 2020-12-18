@@ -1,7 +1,7 @@
 import { EventEmitter, Event, commands } from 'vscode';
 import * as vscode from 'vscode';
 import { ExtendedTreeItem, REVIEWERS_ROOT_LABEL, LABELS_ROOT_LABEL, VERSION_ROOT_LABEL } from './treeItem';
-import { TreeCreator } from './treeCreator';
+import TreeCreator from './treeCreator';
 
 export class TreeDataProvider implements vscode.TreeDataProvider<ExtendedTreeItem> {
   tree!: ExtendedTreeItem[];
@@ -15,7 +15,10 @@ export class TreeDataProvider implements vscode.TreeDataProvider<ExtendedTreeIte
   }
 
   getSelectedReviewers (): Array<string | undefined> {
-    return this.getSelectedByRootLabel(REVIEWERS_ROOT_LABEL);
+    return this.getSelectedByRootLabel(REVIEWERS_ROOT_LABEL).map(name => {
+      // don't ask me why
+      return name?.match('\\((.*)$')?.[1].slice(0, -1);
+    });
   }
 
   getSelectedLabels (): Array<string | undefined> {
@@ -42,7 +45,7 @@ export class TreeDataProvider implements vscode.TreeDataProvider<ExtendedTreeIte
 
   readonly onDidChangeTreeData: Event<ExtendedTreeItem | null> = this._onDidChangeTreeData.event;
 
-  refresh (element: ExtendedTreeItem | null): void {
+  refresh (element: (ExtendedTreeItem | null) = null): void {
     this._onDidChangeTreeData.fire(element);
   }
 

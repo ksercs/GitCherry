@@ -28,5 +28,10 @@ export const REPO_DATA = {
 };
 
 export const REVIEWER_DATA = {
-  url: process.env.REVIEWERS_SOURCE
+  url: process.env.REVIEWERS_SOURCE as string
+};
+
+export const USERS_DATA = {
+  url: process.env.USERS_SOURCE as string,
+  jwt: process.env.USER_TOKEN as string
 };
