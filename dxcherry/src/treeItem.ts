@@ -34,11 +34,6 @@ export class ExtendedTreeItem extends TreeItem {
     }
   }
 
-  // getSelectedChildrenLabelsArray (): Array<string | undefined> {
-  //   return this.children?.filter(child => child.selected)
-  //     .map(child => child.label) || [];
-  // }
-
   getSelectedChildrenLabelsArray (): Array<string | undefined> {
     let nodes = [] as Array<ExtendedTreeItem>;
 
