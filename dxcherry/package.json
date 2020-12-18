@@ -41,11 +41,11 @@
 				}
 			},
 			{
-				"command": "continue",
-				"title": "Continue",
+				"command": "refresh",
+				"title": "Refresh",
 				"icon": {
-					"light": "resources/light/continue.svg",
-					"dark": "resources/dark/continue.svg"
+					"light": "resources/light/refresh.svg",
+					"dark": "resources/dark/refresh.svg"
 				}
 			}
 		],
@@ -57,7 +57,7 @@
 					"when": "view == exampleView"
 				},
 				{
-					"command": "continue",
+					"command": "refresh",
 					"group": "navigation",
 					"when": "view == exampleView"
 				}
@@ -78,13 +78,21 @@
 		"@types/glob": "^7.1.3",
 		"@types/mocha": "^8.0.0",
 		"@types/vscode": "^1.50.0",
-		"@typescript-eslint/eslint-plugin": "^4.1.1",
-		"@typescript-eslint/parser": "^4.1.1",
+		"@typescript-eslint/eslint-plugin": "^4.8.2",
+		"@typescript-eslint/parser": "^4.8.2",
 		"dotenv": "^8.2.0",
-		"eslint": "^7.9.0",
+		"eslint": "^7.14.0",
+		"eslint-config-airbnb-base": "^14.2.1",
+		"eslint-config-standard": "^16.0.2",
+		"eslint-plugin-import": "^2.22.1",
+		"eslint-plugin-node": "^11.1.0",
+		"eslint-plugin-promise": "^4.2.1",
 		"glob": "^7.1.6",
 		"mocha": "^8.1.3",
 		"typescript": "^4.0.2",
 		"vscode-test": "^1.4.0"
+	},
+	"dependencies": {
+		"axios": "^0.21.0"
 	}
 }

@@ -9,21 +9,19 @@ export class ExtendedTreeItem extends TreeItem {
   children: ExtendedTreeItem[]|undefined;
   selected: boolean;
 
-  constructor(label: string, children?: ExtendedTreeItem[]) {
-    super(
-        label,
-        children === undefined ? TreeItemCollapsibleState.None :
-                                  TreeItemCollapsibleState.Expanded);
+  constructor (label: string, children?: ExtendedTreeItem[], expanded?: boolean) {
+    const state = children ? (expanded ? TreeItemCollapsibleState.Expanded : TreeItemCollapsibleState.Collapsed) : TreeItemCollapsibleState.None;
+    super(label, state);
     this.children = children;
     this.selected = false;
   }
 
-  setIcon() {
-    if(this.children?.length) {
+  setIcon () {
+    if (this.children?.length) {
       return;
     }
 
-    if(this.selected) {
+    if (this.selected) {
       this.iconPath = {
         light: path.join(__filename, '..', '..', 'resources', 'light', 'checked.svg'),
         dark: path.join(__filename, '..', '..', 'resources', 'dark', 'checked.svg')
@@ -35,9 +33,20 @@ export class ExtendedTreeItem extends TreeItem {
       };
     }
   }
-  
-  getSelectedChildrenLabelsArray(): Array<string | undefined> {
-    return this.children?.filter(child => child.selected)
-                          .map(child => child.label) || [];
+
+  getSelectedChildrenLabelsArray (): Array<string | undefined> {
+    let nodes = [] as Array<ExtendedTreeItem>;
+
+    this.children?.forEach(child => {
+      if (child.children) {
+        nodes.push(...child.children);
+      }
+    });
+
+    if (nodes.length === 0) {
+      nodes = this.children ?? [];
+    }
+
+    return nodes?.filter(node => node.selected).map(node => node.label);
   }
 }
