@@ -17,7 +17,6 @@ const throwIfNot = <T, K extends keyof T>(obj: Partial<T>, prop: K): T[K] => {
   throwIfNot(process.env, v);
 });
 
-
 const STAGE = process.env.STAGE;
 
 export const GITHUB_USER = {
