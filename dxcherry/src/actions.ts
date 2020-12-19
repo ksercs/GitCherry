@@ -2,6 +2,7 @@ import { payloadGetter } from './payloadGetter';
 import { TreeDataProvider } from './treeDataProvider';
 import TreeCreator from './treeCreator';
 import { window } from 'vscode';
+import { createPullRequest } from './github/createPullRequest';
 
 export class Action {
   static onStart (treeDataProvider: TreeDataProvider) {
@@ -19,6 +20,7 @@ export class Action {
       } else {
         payload.description = titleInput.value;
         titleInput.dispose();
+        createPullRequest(payload);
       }
     });
     titleInput.show();
