@@ -1,7 +1,7 @@
-async function getBranchName() {
+async function getBranchName () {
 
 };
 
 export {
-    getBranchName
-}
+  getBranchName
+};
