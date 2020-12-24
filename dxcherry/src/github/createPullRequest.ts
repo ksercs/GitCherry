@@ -1,42 +1,65 @@
-import { client } from './createClient';
+import { getClient } from './createClient';
 import { getUser } from '../github/getters';
 import { getBranchName } from '../git/branch';
 import { REPO_DATA } from './config';
+import log from '../log';
+import { window } from 'vscode';
 
-async function setLabels (issue_number: number, labels: string[]) {
-  await client.issues.setLabels(Object.assign({}, REPO_DATA, { issue_number, labels }));
+async function setLabels (issueNumber: number, labels: string[]) {
+  await getClient().issues.setLabels(Object.assign({}, REPO_DATA, { issue_number: issueNumber, labels }));
 };
 
-async function addAssign (issue_number: number, assignees: string[]) {
-  await client.issues.addAssignees(Object.assign({}, REPO_DATA, { issue_number, assignees }));
+async function addAssign (issueNumber: number, assignees: string[]) {
+  await getClient().issues.addAssignees(Object.assign({}, REPO_DATA, { issue_number: issueNumber, assignees }));
 };
 
-async function addReviewers (pull_number: number, reviewers: string[]) {
-  await client.pulls.requestReviewers(Object.assign({}, REPO_DATA, { pull_number, reviewers }));
+async function addReviewers (pullNumber: number, reviewers: string[]) {
+  await getClient().pulls.requestReviewers(Object.assign({}, REPO_DATA, { pull_number: pullNumber, reviewers }));
 };
 
-function createPullRequest ({ title, description, versions, reviewers, labels }: any) {
-  versions.forEach(async (version: string) => {
-    const { login } = await getUser();
-    const branch = await getBranchName();
+async function createPullRequest ({ title, description, versions, reviewers, labels }: any) {
+  log.appendLine('start creating pull requests');
+  const { login } = await getUser();
+  const branch = await getBranchName();
+  const branchWithoutVersion = branch.match('(.*)_[0-9]*_[0-9]*')[1];
 
-    const pullRequest = await client.pulls.create(Object.assign({},
+  log.appendLine(`login: ${login}, branch: ${branch}, branchWithoutVersion: ${branchWithoutVersion}`);
+
+  versions.forEach(async (version: string, index: number) => {
+    const payload = Object.assign({},
       REPO_DATA, {
         base: version,
-        head: `${login}:${branch}`,
+        head: `${login}:${branchWithoutVersion}_${version}`,
         title,
         body: description
-      }));
-    if (pullRequest.status === 201) {
-      console.log('Pull request created!');
-    } else {
-      console.log('An error occured!');
-    }
-    const pullRequestNumber = pullRequest.data.number;
+      });
+    const errMessage = `Pull request from ${payload.head} to ${version} was not created. Please check, that ${payload.head} was pushed to the fork.`;
 
-    await setLabels(pullRequestNumber, [...labels, version]);
-    await addAssign(pullRequestNumber, [login]);
-    await addReviewers(pullRequestNumber, reviewers);
+    log.appendLine(`payload: ${JSON.stringify(payload)}`);
+    try {
+      const pullRequest = await getClient().pulls.create(payload);
+      log.appendLine(`PR creation response: ${JSON.stringify(pullRequest)}`);
+      if (pullRequest.status === 201) {
+        log.appendLine('Pull request created!');
+        window.showInformationMessage(`Pull request from ${payload.head} to ${version} was successfully created.`);
+      } else {
+        log.appendLine(pullRequest.status.toString());
+        window.showErrorMessage(errMessage);
+      }
+      const pullRequestNumber = pullRequest.data.number;
+
+      if (index !== versions.length - 1) {
+        // TODO
+        // labels.push('cherry-pick');
+      }
+
+      await setLabels(pullRequestNumber, [...labels, version]);
+      await addAssign(pullRequestNumber, [login]);
+      await addReviewers(pullRequestNumber, reviewers);
+    } catch (err) {
+      log.appendLine(err);
+      window.showErrorMessage(errMessage);
+    }
   });
 };
 

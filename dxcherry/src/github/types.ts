@@ -1,20 +1,22 @@
+import { Octokit } from '@octokit/rest';
 import { GetResponseDataTypeFromEndpointMethod } from '@octokit/types';
-import { client } from './createClient';
+
+console.log(Octokit.prototype);
 
 type LabelsDataType = GetResponseDataTypeFromEndpointMethod<
-  typeof client.issues.listLabelsForRepo
+  typeof Octokit.prototype.issues.listLabelsForRepo
 >;
 
 type ReviewersDataType = GetResponseDataTypeFromEndpointMethod<
-  typeof client.repos.listCollaborators
+  typeof Octokit.prototype.repos.listCollaborators
 >;
 
 type BranchesDataType = GetResponseDataTypeFromEndpointMethod<
-  typeof client.repos.listBranches
+  typeof Octokit.prototype.repos.listBranches
 >;
 
 type UserDataType = GetResponseDataTypeFromEndpointMethod<
-  typeof client.users.getAuthenticated
+  typeof Octokit.prototype.users.getAuthenticated
 >;
 
 type GetResponseDataType = LabelsDataType | ReviewersDataType | BranchesDataType | UserDataType;

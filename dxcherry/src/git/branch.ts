@@ -1,8 +1,8 @@
-import { PATH_TO_REPO } from '../github/config';
+import { workspace } from 'vscode';
 const branch = require('git-branch');
 
 async function getBranchName () {
-  return await branch(PATH_TO_REPO);
+  return await branch(workspace.workspaceFolders?.[0].uri.fsPath);
 };
 
 export {
