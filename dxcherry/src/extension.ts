@@ -10,7 +10,7 @@ export async function activate (context: ExtensionContext) {
   const treeDataProvider = new TreeDataProvider();
   await createClient();
 
-  window.registerTreeDataProvider('exampleView', treeDataProvider);
+  window.registerTreeDataProvider('main', treeDataProvider);
   commands.registerCommand('start', () => Action.onStart(treeDataProvider));
   commands.registerCommand('refresh', () => Action.onRefresh(treeDataProvider));
   await Git.init();

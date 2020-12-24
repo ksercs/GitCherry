@@ -14,7 +14,7 @@ export async function createClient () {
   }
 
   window.showInformationMessage(`You are logged in GitHub as ${session.account.label}`);
-  log.appendLine(`${session.accessToken} ${session.id} ${session.account.label}`);
+  log.appendLine(`GH login: ${session.account.label}`);
 
   client = new Octokit({
     auth: session.accessToken

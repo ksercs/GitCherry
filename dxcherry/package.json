@@ -2,7 +2,7 @@
 	"name": "dxcherry",
 	"displayName": "dxCherry",
 	"description": "",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"publisher": "jtoming",
 	"engines": {
 		"vscode": "^1.50.0"
@@ -11,24 +11,25 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onView:exampleView"
+		"onView:main"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"viewsContainers": {
 			"activitybar": [
 				{
-					"id": "test",
-					"title": "test",
-					"icon": "resources/dark/checked.svg"
+					"id": "dxCherry",
+					"title": "dxCherry",
+					"icon": "resources/dark/cherry.svg"
 				}
 			]
 		},
 		"views": {
-			"test": [
+			"dxCherry": [
 				{
-					"id": "exampleView",
-					"name": "exampleView"
+					"id": "main",
+					"name": "main",
+					"icon": "resources/dark/cherry.svg"
 				}
 			]
 		},
@@ -55,12 +56,12 @@
 				{
 					"command": "start",
 					"group": "navigation",
-					"when": "view == exampleView"
+					"when": "view == main"
 				},
 				{
 					"command": "refresh",
 					"group": "navigation",
-					"when": "view == exampleView"
+					"when": "view == main"
 				}
 			]
 		}
