@@ -2,6 +2,10 @@ import axios from 'axios';
 import { REVIEWER_DATA, USERS_DATA } from '../github/config';
 import { getUser } from '../github/getters';
 import Storage, { REVIEWERS } from '../storage';
+import { authentication } from 'vscode';
+import log from '../log';
+
+const TECH_WRITER_ROLE = 'Technical Writer';
 
 interface Reviewer {
   l: string,
@@ -26,12 +30,45 @@ async function getAllUsers () : Promise<Array<Reviewer>> {
   return response.data as Array<Reviewer>;
 }
 
+async function getToken () : Promise<any> {
+  const session = await authentication.getSession('microsoft', ['openid'], { createIfNone: true });
+
+  log.appendLine(JSON.stringify(session.account));
+
+  try {
+    const response = await axios.post('https://resolve.devexpress.com/authorize', {
+      access_token: session.accessToken
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      timeout: 30000
+    });
+
+    log.appendLine(`token request finished with status ${response.status}`);
+    return response.data;
+  } catch (err) {
+    log.appendLine(`token request failed: ${err}`);
+    throw new Error('Something went wrong during refresh, please, check that you signed in MS from corporate account.');
+  }
+}
+
 async function getSquadData () : Promise<any> {
+  const token = await getToken();
+
+  if (!token) {
+    return {};
+  }
+
   const response = await axios(USERS_DATA.url, {
     headers: {
-      cookie: `jwt=${USERS_DATA.jwt}`
-    }
+      cookie: `jwt=${token}`
+    },
+    timeout: 30000
   });
+
+  log.appendLine(`squad data request finished with status ${response.status}`);
 
   return response.data.data;
 }
@@ -45,9 +82,9 @@ function getOwnerSquad (users: any, orgUnits: any, owner: Reviewer) : string {
   }
 
   const ownerData = users[ownerKey];
-  const squadKey = ownerData.hierarchies.squad?.[0];
+  const squad = getSquad(ownerData, orgUnits);
 
-  return orgUnits[squadKey].name;
+  return squad.name;
 }
 
 export default async function getReviewerPayload (ignoreCache?: boolean) : Promise<any[]> {
@@ -64,6 +101,17 @@ export default async function getReviewerPayload (ignoreCache?: boolean) : Promi
   }
 
   return result;
+}
+
+function getSquad (userData: any, orgUnits: any) : any {
+  if (userData.roles.includes(TECH_WRITER_ROLE)) {
+    return {
+      name: TECH_WRITER_ROLE
+    };
+  }
+
+  const squadKey = userData.hierarchies.squad?.find((key: string) => !orgUnits[key].isDeleted);
+  return orgUnits[squadKey];
 }
 
 async function createReviewerPayload () : Promise<any[]> {
@@ -95,9 +143,10 @@ async function createReviewerPayload () : Promise<any[]> {
       return;
     }
 
-    const squadKey = userData.hierarchies.squad?.[0];
-    const squad = orgUnits[squadKey]?.name || 'Other';
-    const squadData = result.find((e: any) => e.name === squad);
+    const squad = getSquad(userData, orgUnits);
+
+    const squadName = squad?.name || 'Other';
+    const squadData = result.find((e: any) => e.name === squadName);
 
     if (squadData) {
       squadData.children.push({
@@ -105,7 +154,7 @@ async function createReviewerPayload () : Promise<any[]> {
       });
     } else {
       result.push({
-        name: squad,
+        name: squadName,
         children: [{
           name: `${user.l} ${user.f} (${user.gh})`
         }],
