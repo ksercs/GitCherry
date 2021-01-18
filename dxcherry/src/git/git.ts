@@ -13,6 +13,7 @@ export default class Git {
 
       Git.git = simpleGit(options);
       await Git.git.init();
+      Git.getRepoData();
     }
 
     static async getLastCommit () {
@@ -21,6 +22,41 @@ export default class Git {
         return commits.all[0];
       } catch (err) {
         window.showErrorMessage('Cannot get last commit. Please, check that opened workspace folder is git repository');
+      }
+    }
+
+    static async getRepoData () {
+      let remoteUrl;
+      try {
+        remoteUrl = await Git.git.remote(['get-url', '--all', 'upstream']);
+      } catch (err) {
+        remoteUrl = await Git.git.remote(['get-url', '--all', 'origin']);
+      }
+
+      if (typeof remoteUrl !== 'string') {
+        throw new Error('Repository is not found. Please, check that you opened folder which contains .git folder.');
+      }
+
+      const repoData = Git.parseURL(remoteUrl);
+      if (repoData && repoData[1] && repoData[2]) {
+        return {
+          owner: repoData[1],
+          repo: repoData[2]
+        };
+      }
+
+      throw new Error('Repository is not found. Please, check that you opened folder which contains .git folder.');
+    }
+
+    private static parseURL (url: string) {
+      let repoData = url.match('https://github.com/([A-Za-z0-9-]*)/([A-Za-z0-9-]*)');
+      if (repoData?.[1] && repoData?.[2]) {
+        return repoData;
+      } else {
+        repoData = url.match('git@github.com:([A-Za-z0-9-]*)/([A-Za-z0-9-]*).git');
+        if (repoData?.[1] && repoData?.[2]) {
+          return repoData;
+        }
       }
     }
 }
