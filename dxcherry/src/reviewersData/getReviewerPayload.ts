@@ -3,7 +3,9 @@ import { REVIEWER_DATA, USERS_DATA } from '../github/config';
 import { getUser } from '../github/getters';
 import Storage, { REVIEWERS } from '../storage';
 import { authentication } from 'vscode';
-import log from '../log';
+import { logInfo } from '../info';
+import { msRefreshError, ownerSquadNotFoundError } from '../info/errors/errors';
+import { GithubLoginNotFoundError } from '../info/errors/githubLoginNotFoundError';
 
 const TECH_WRITER_ROLE = 'Technical Writer';
 
@@ -22,7 +24,7 @@ function getOwnerData (allUsers : Array<Reviewer>, ownerLogin : string) : Review
     return owner;
   }
 
-  throw new Error(`user github login was not found in database: ${ownerLogin}`);
+  throw new GithubLoginNotFoundError(ownerLogin);
 }
 
 async function getAllUsers () : Promise<Array<Reviewer>> {
@@ -33,7 +35,7 @@ async function getAllUsers () : Promise<Array<Reviewer>> {
 async function getToken () : Promise<any> {
   const session = await authentication.getSession('microsoft', ['openid'], { createIfNone: true });
 
-  log.appendLine(JSON.stringify(session.account));
+  logInfo(JSON.stringify(session.account));
 
   try {
     const response = await axios.post('https://resolve.devexpress.com/authorize', {
@@ -46,11 +48,11 @@ async function getToken () : Promise<any> {
       timeout: 30000
     });
 
-    log.appendLine(`token request finished with status ${response.status}`);
+    logInfo(`Token request finished with status ${response.status}`);
     return response.data;
   } catch (err) {
-    log.appendLine(`token request failed: ${err}`);
-    throw new Error('Something went wrong during refresh, please, check that you signed in MS from corporate account.');
+    logInfo(`Token request failed: ${err}`);
+    throw msRefreshError;
   }
 }
 
@@ -68,7 +70,7 @@ async function getSquadData () : Promise<any> {
     timeout: 30000
   });
 
-  log.appendLine(`squad data request finished with status ${response.status}`);
+  logInfo(`Squad data request finished with status ${response.status}`);
 
   return response.data.data;
 }
@@ -78,7 +80,7 @@ function getOwnerSquad (users: any, orgUnits: any, owner: Reviewer) : string {
   const ownerKey = userKeys.find(key => users[key].email === owner.e);
 
   if (!ownerKey) {
-    throw new Error('owner squad was not defined');
+    throw ownerSquadNotFoundError;
   }
 
   const ownerData = users[ownerKey];

@@ -1,7 +1,7 @@
 import { Octokit } from '@octokit/rest';
-import { window } from 'vscode';
 import getSession from './getSession';
-import log from '../log';
+import { showInfo, logInfo } from '../info';
+import { missingGithubTokenError, missingOctokitClientError } from '../info/errors/errors';
 
 let client : Octokit;
 
@@ -9,12 +9,12 @@ export async function createClient () {
   const session = await getSession();
 
   if (!session) {
-    window.showErrorMessage('Missing GitHub token');
-    log.appendLine('Missing GitHub token');
+    missingGithubTokenError.show();
+    missingGithubTokenError.log();
   }
 
-  window.showInformationMessage(`You are logged in GitHub as ${session.account.label}`);
-  log.appendLine(`GH login: ${session.account.label}`);
+  showInfo(`You are logged in GitHub as ${session.account.label}`);
+  logInfo(`Github login: ${session.account.label}`);
 
   client = new Octokit({
     auth: session.accessToken
@@ -23,8 +23,8 @@ export async function createClient () {
 
 export function getClient () : Octokit {
   if (!client) {
-    window.showErrorMessage('Missing octokit client');
-    log.appendLine('Missing octokit client');
+    missingOctokitClientError.show();
+    missingOctokitClientError.log();
   }
 
   return client;

@@ -1,12 +1,12 @@
 import { TreeDataProvider } from './treeDataProvider';
 import { Payload } from './payload';
 import Git from './git/git';
-import log from './log';
+import { logInfo } from './info';
 
 export async function payloadGetter (treeDataProvider: TreeDataProvider): Promise<Payload | undefined> {
-  log.appendLine('getting payload');
+  logInfo('Payload is getting');
   const lastCommit = await Git.getLastCommit();
-  log.appendLine(`last commit: ${JSON.stringify(lastCommit)}`);
+  logInfo(`Last commit: ${JSON.stringify(lastCommit)}`);
 
   if (!lastCommit) {
     return;

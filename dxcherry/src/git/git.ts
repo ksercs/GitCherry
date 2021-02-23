@@ -1,5 +1,7 @@
 import simpleGit, { SimpleGit } from 'simple-git';
-import { workspace, window } from 'vscode';
+import { workspace } from 'vscode';
+import { repoNotFoundError, noLastCommitError } from '../info/errors/errors';
+import { GITHUB_HTTPS_URL_REGEX, GITHUB_SSH_URL_REGEX } from './constants';
 
 export default class Git {
     private static git: SimpleGit;
@@ -21,39 +23,39 @@ export default class Git {
         const commits = await Git.git.log(['-1']);
         return commits.all[0];
       } catch (err) {
-        window.showErrorMessage('Cannot get last commit. Please, check that opened workspace folder is git repository');
+        noLastCommitError.show();
       }
     }
 
     static async getRepoData () {
-      let remoteUrl;
+      let remoteUrl: string;
       try {
-        remoteUrl = await Git.git.remote(['get-url', '--all', 'upstream']);
+        remoteUrl = await Git.git.remote(['get-url', '--all', 'upstream']) as string;
       } catch (err) {
-        remoteUrl = await Git.git.remote(['get-url', '--all', 'origin']);
+        remoteUrl = await Git.git.remote(['get-url', '--all', 'origin']) as string;
       }
 
       if (typeof remoteUrl !== 'string') {
-        throw new Error('Repository is not found. Please, check that you opened folder which contains .git folder.');
+        throw repoNotFoundError;
       }
 
       const repoData = Git.parseURL(remoteUrl);
-      if (repoData && repoData[1] && repoData[2]) {
+      if (repoData?.[1] && repoData?.[2]) {
         return {
           owner: repoData[1],
           repo: repoData[2]
         };
       }
 
-      throw new Error('Repository is not found. Please, check that you opened folder which contains .git folder.');
+      throw repoNotFoundError;
     }
 
     private static parseURL (url: string) {
-      let repoData = url.match('https://github.com/([A-Za-z0-9-]*)/([A-Za-z0-9-]*)');
+      let repoData = url.match(GITHUB_HTTPS_URL_REGEX);
       if (repoData?.[1] && repoData?.[2]) {
         return repoData;
       } else {
-        repoData = url.match('git@github.com:([A-Za-z0-9-]*)/([A-Za-z0-9-]*).git');
+        repoData = url.match(GITHUB_SSH_URL_REGEX);
         if (repoData?.[1] && repoData?.[2]) {
           return repoData;
         }

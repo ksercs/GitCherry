@@ -2,8 +2,8 @@ import { getClient } from './createClient';
 import { getUser } from '../github/getters';
 import { getBranchName } from '../git/branch';
 import { REPO_DATA } from './config';
-import log from '../log';
-import { window } from 'vscode';
+import { logInfo, showInfo } from '../info';
+import { PullRequestCreatingError } from '../info/errors/pullRequestCreatingError';
 
 async function setLabels (issueNumber: number, labels: string[]) {
   await getClient().issues.setLabels(Object.assign({}, REPO_DATA, { issue_number: issueNumber, labels }));
@@ -18,12 +18,12 @@ async function addReviewers (pullNumber: number, reviewers: string[]) {
 };
 
 async function createPullRequest ({ title, description, versions, reviewers, labels }: any) {
-  log.appendLine('start creating pull requests');
+  logInfo('Start pull requests creating');
   const { login } = await getUser();
   const branch = await getBranchName();
   const branchWithoutVersion = branch.match('(.*)_[0-9]*_[0-9]*')[1];
 
-  log.appendLine(`login: ${login}, branch: ${branch}, branchWithoutVersion: ${branchWithoutVersion}`);
+  logInfo(`login: ${login}, branch: ${branch}, branchWithoutVersion: ${branchWithoutVersion}`);
 
   versions.forEach(async (version: string, index: number) => {
     const payload = Object.assign({},
@@ -33,18 +33,18 @@ async function createPullRequest ({ title, description, versions, reviewers, lab
         title,
         body: description
       });
-    const errMessage = `Pull request from ${payload.head} to ${version} was not created. Please check, that ${payload.head} was pushed to the fork.`;
 
-    log.appendLine(`payload: ${JSON.stringify(payload)}`);
+    const creatingError = new PullRequestCreatingError(payload.head, version);
+    logInfo(`payload: ${JSON.stringify(payload)}`);
     try {
       const pullRequest = await getClient().pulls.create(payload);
-      log.appendLine(`PR creation response: ${JSON.stringify(pullRequest)}`);
+      logInfo(`Pull request creation response: ${JSON.stringify(pullRequest)}`);
       if (pullRequest.status === 201) {
-        log.appendLine('Pull request created!');
-        window.showInformationMessage(`Pull request from ${payload.head} to ${version} was successfully created.`);
+        logInfo('Pull request is created');
+        showInfo(`Pull request from ${payload.head} to ${version} was successfully created`);
       } else {
-        log.appendLine(pullRequest.status.toString());
-        window.showErrorMessage(errMessage);
+        logInfo(pullRequest.status + '');
+        creatingError.show();
       }
       const pullRequestNumber = pullRequest.data.number;
 
@@ -57,8 +57,8 @@ async function createPullRequest ({ title, description, versions, reviewers, lab
       await addAssign(pullRequestNumber, [login]);
       await addReviewers(pullRequestNumber, reviewers);
     } catch (err) {
-      log.appendLine(err);
-      window.showErrorMessage(errMessage);
+      logInfo(err);
+      creatingError.show();
     }
   });
 };

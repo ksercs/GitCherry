@@ -1,8 +1,6 @@
 import { Octokit } from '@octokit/rest';
 import { GetResponseDataTypeFromEndpointMethod } from '@octokit/types';
 
-console.log(Octokit.prototype);
-
 type LabelsDataType = GetResponseDataTypeFromEndpointMethod<
   typeof Octokit.prototype.issues.listLabelsForRepo
 >;

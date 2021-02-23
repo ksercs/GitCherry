@@ -47,6 +47,6 @@ export class ExtendedTreeItem extends TreeItem {
       nodes = this.children ?? [];
     }
 
-    return nodes?.filter(node => node.selected).map(node => node.label);
+    return nodes?.filter(node => node.selected).map(node => node.label as string);
   }
 }

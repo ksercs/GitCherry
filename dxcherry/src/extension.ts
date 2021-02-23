@@ -12,7 +12,6 @@ export async function activate (context: ExtensionContext) {
   await createClient();
   await Git.init();
   const { owner, repo } = await Git.getRepoData();
-  console.log(owner, repo);
   setRepoData(owner, repo);
   Storage.setStorage(context.globalState);
 
