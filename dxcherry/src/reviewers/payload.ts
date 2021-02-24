@@ -1,20 +1,17 @@
 import axios from 'axios';
-import { REVIEWER_DATA, USERS_DATA } from '../github/config';
+import { REVIEWER_DATA } from '../github/config';
 import Storage, { REVIEWERS } from './storage';
-import { authentication } from 'vscode';
-import { logInfo } from '../info';
-import { msRefreshError, ownerSquadNotFoundError } from '../info/errors/errors';
+import { ownerSquadNotFoundError } from '../info/errors/errors';
 import { GithubLoginNotFoundError } from '../info/errors/githubLoginNotFoundError';
 import GithubClient from '../github/client';
+import { Reviewer } from './reviewer';
+import { getSquadData } from './employees';
 
 const TECH_WRITER_ROLE = 'Technical Writer';
 
-interface Reviewer {
-  l: string,
-  f: string,
-  gh: string,
-  e: string,
-  t: string
+async function getAllUsers () : Promise<Reviewer[]> {
+  const response = await axios(REVIEWER_DATA.url);
+  return response.data as Reviewer[];
 }
 
 function getOwnerData (allUsers : Array<Reviewer>, ownerLogin : string) : Reviewer {
@@ -25,54 +22,6 @@ function getOwnerData (allUsers : Array<Reviewer>, ownerLogin : string) : Review
   }
 
   throw new GithubLoginNotFoundError(ownerLogin);
-}
-
-async function getAllUsers () : Promise<Array<Reviewer>> {
-  const response = await axios(REVIEWER_DATA.url);
-  return response.data as Array<Reviewer>;
-}
-
-async function getToken () : Promise<any> {
-  const session = await authentication.getSession('microsoft', ['openid'], { createIfNone: true });
-
-  logInfo(JSON.stringify(session.account));
-
-  try {
-    const response = await axios.post('https://resolve.devexpress.com/authorize', {
-      access_token: session.accessToken
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json'
-      },
-      timeout: 30000
-    });
-
-    logInfo(`Token request finished with status ${response.status}`);
-    return response.data;
-  } catch (err) {
-    logInfo(`Token request failed: ${err}`);
-    throw msRefreshError;
-  }
-}
-
-async function getSquadData () : Promise<any> {
-  const token = await getToken();
-
-  if (!token) {
-    return {};
-  }
-
-  const response = await axios(USERS_DATA.url, {
-    headers: {
-      cookie: `jwt=${token}`
-    },
-    timeout: 30000
-  });
-
-  logInfo(`Squad data request finished with status ${response.status}`);
-
-  return response.data.data;
 }
 
 function getOwnerSquad (users: any, orgUnits: any, owner: Reviewer) : string {
@@ -89,22 +38,6 @@ function getOwnerSquad (users: any, orgUnits: any, owner: Reviewer) : string {
   return squad.name;
 }
 
-export default async function getReviewerPayload (ignoreCache?: boolean) : Promise<any[]> {
-  const storage = Storage.getStorage();
-  let result;
-
-  if (!ignoreCache) {
-    result = storage.get(REVIEWERS) as any[];
-  }
-
-  if (!result) {
-    result = await createReviewerPayload();
-    storage.update(REVIEWERS, result);
-  }
-
-  return result;
-}
-
 function getSquad (userData: any, orgUnits: any) : any {
   if (userData.roles.includes(TECH_WRITER_ROLE)) {
     return {
@@ -116,7 +49,7 @@ function getSquad (userData: any, orgUnits: any) : any {
   return orgUnits[squadKey];
 }
 
-async function createReviewerPayload () : Promise<any[]> {
+async function createReviewerPayload () : Promise<string[]> {
   const { login } = await GithubClient.getUser();
   const allUsers = await getAllUsers();
   const owner = getOwnerData(allUsers, login);
@@ -167,3 +100,23 @@ async function createReviewerPayload () : Promise<any[]> {
 
   return result;
 }
+
+async function getReviewersPayload (ignoreCache?: boolean) : Promise<string[]> {
+  const storage = Storage.getStorage();
+  let result;
+
+  if (!ignoreCache) {
+    result = storage.get(REVIEWERS) as any[];
+  }
+
+  if (!result) {
+    result = await createReviewerPayload();
+    storage.update(REVIEWERS, result);
+  }
+
+  return result;
+}
+
+export {
+  getReviewersPayload
+};
