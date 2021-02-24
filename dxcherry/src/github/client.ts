@@ -96,6 +96,7 @@ export default class GithubClient {
 
             return response;
         } catch(e) {
+            // TODO: add e.message showing
             logInfo(e);
             const creatingError = new PullRequestCreatingError(payload.head, version);
             creatingError.show();

@@ -10,22 +10,22 @@ export class TreeDataProvider implements vscode.TreeDataProvider<ExtendedTreeIte
     commands.registerCommand('treeView.selectTreeItem', (element) => this.onItemClicked(element));
   }
 
-  getSelectedVersions (): Array<string | undefined> {
+  getSelectedVersions (): string[] {
     return this.getSelectedByRootLabel(VERSION_ROOT_LABEL);
   }
 
-  getSelectedReviewers (): Array<string | undefined> {
+  getSelectedReviewers (): string[] {
     return this.getSelectedByRootLabel(REVIEWERS_ROOT_LABEL).map(name => {
-      // don't ask me why
+      // TODO: get rid of it
       return name?.match('\\((.*)$')?.[1].slice(0, -1);
-    });
+    }).filter(item => item !== undefined) as string[];
   }
 
-  getSelectedLabels (): Array<string | undefined> {
+  getSelectedLabels (): string[] {
     return this.getSelectedByRootLabel(LABELS_ROOT_LABEL);
   }
 
-  getSelectedByRootLabel (rootLabel: string): Array<string | undefined> {
+  getSelectedByRootLabel (rootLabel: string): string[] {
     const root = this.getTree(rootLabel);
     return root?.getSelectedChildrenLabelsArray() || [];
   }

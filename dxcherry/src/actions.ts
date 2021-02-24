@@ -2,9 +2,9 @@ import { payloadGetter } from './payloadGetter';
 import { TreeDataProvider } from './treeDataProvider';
 import TreeCreator from './treeCreator';
 import { InputBox, window } from 'vscode';
-import { createPullRequest } from './github/createPullRequest';
 import { Payload } from './payload';
 import { logInfo } from './info';
+import { processCherryPickRequest } from './processCherryPickRequest';
 
 export class Action {
   static async onStart (treeDataProvider: TreeDataProvider) {
@@ -27,7 +27,7 @@ export class Action {
         logInfo(`Accepted description: ${titleInput.value}`);
         payload.description = titleInput.value;
         titleInput.dispose();
-        await createPullRequest(payload);
+        await processCherryPickRequest(payload);
       }
     });
 

@@ -34,7 +34,7 @@ export class ExtendedTreeItem extends TreeItem {
     }
   }
 
-  getSelectedChildrenLabelsArray (): Array<string | undefined> {
+  getSelectedChildrenLabelsArray (): string[] {
     let nodes = [] as Array<ExtendedTreeItem>;
 
     this.children?.forEach(child => {
