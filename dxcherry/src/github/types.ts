@@ -17,12 +17,23 @@ type UserDataType = GetResponseDataTypeFromEndpointMethod<
   typeof Octokit.prototype.users.getAuthenticated
 >;
 
-type GetResponseDataType = LabelsDataType | ReviewersDataType | BranchesDataType | UserDataType;
+type PullRequestDataType = GetResponseDataTypeFromEndpointMethod<
+  typeof Octokit.prototype.pulls.create
+>;
+
+type GetResponseDataType = LabelsDataType | ReviewersDataType | BranchesDataType | UserDataType | PullRequestDataType;
+
+type RepoDataType = {
+  repo: string,
+  owner: string
+};
 
 export {
   LabelsDataType,
   ReviewersDataType,
   BranchesDataType,
   GetResponseDataType,
-  UserDataType
+  UserDataType,
+  PullRequestDataType,
+  RepoDataType
 };

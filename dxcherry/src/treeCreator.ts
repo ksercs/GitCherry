@@ -1,6 +1,6 @@
 import { ExtendedTreeItem, REVIEWERS_ROOT_LABEL, LABELS_ROOT_LABEL, VERSION_ROOT_LABEL } from './treeItem';
-import { getLabels, getBranches } from './github/getters';
 import getReviewerPayload from './reviewersData/getReviewerPayload';
+import GithubClient from './github/client';
 
 const CHERRY_PICK_LABEL = 'cherry-pick';
 const AUTOMATICALLY_ADDED_LABELS = [CHERRY_PICK_LABEL];
@@ -32,8 +32,8 @@ export default class TreeCreator {
   }
 
   static async createTree (ignoreCache?: boolean): Promise<ExtendedTreeItem[]> {
-    const branches = await getBranches();
-    const labels = await getLabels();
+    const branches = await GithubClient.getBranches();
+    const labels = await GithubClient.getLabels();
 
     return [new ExtendedTreeItem('Pull request settings', [
       await TreeCreator.createBranchesTree(branches),
