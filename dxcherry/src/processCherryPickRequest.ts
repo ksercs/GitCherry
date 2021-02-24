@@ -14,10 +14,10 @@ async function processCherryPickRequest ({ title, description, versions, reviewe
   logInfo(`login: ${login}, branch: ${branch}, branchWithoutVersion: ${branchWithoutVersion}`);
 
   versions.forEach(async (version: string) => {
-      // cherry pick here
+    // cherry pick here
 
-      // TODO: add 'cherry-pick' label to old versions
-      await createPullRequest(login, branchWithoutVersion, version, title, description, labels, reviewers);
+    // TODO: add 'cherry-pick' label to old versions
+    await createPullRequest(login, branchWithoutVersion, version, title, description, labels, reviewers);
   });
 };
 

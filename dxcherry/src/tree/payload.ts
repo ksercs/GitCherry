@@ -17,8 +17,8 @@ async function getTreePayload (treeDataProvider: TreeDataProvider): Promise<Tree
   logInfo(`Last commit: ${JSON.stringify(lastCommit)}`);
 
   if (!lastCommit) {
-      // TODO: when is there no last commit?
-      // TODO: replace with first commit
+    // TODO: when is there no last commit?
+    // TODO: replace with first commit
     return;
   }
 
@@ -32,6 +32,6 @@ async function getTreePayload (treeDataProvider: TreeDataProvider): Promise<Tree
 }
 
 export {
-    getTreePayload,
-    TreePayload
+  getTreePayload,
+  TreePayload
 };

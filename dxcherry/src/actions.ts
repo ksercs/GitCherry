@@ -38,13 +38,13 @@ export class Action {
     logInfo('Description input is created');
     input.value = '';
     input.step = 2;
-    input.title = "Enter pull request description";
+    input.title = 'Enter pull request description';
   }
 
   private static createTitleInput (payload: TreePayload) : InputBox {
     const titleInput = window.createInputBox();
 
-    titleInput.title = "Enter pull request title";
+    titleInput.title = 'Enter pull request title';
     titleInput.value = payload.title;
     titleInput.totalSteps = 2;
     titleInput.step = 1;

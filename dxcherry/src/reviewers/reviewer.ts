@@ -7,5 +7,5 @@ interface Reviewer {
 };
 
 export {
-    Reviewer
+  Reviewer
 };

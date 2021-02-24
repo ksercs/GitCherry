@@ -22,7 +22,7 @@ export default class Git {
       throw repoNotFoundError;
     }
 
-    private static async getRemoteUrl() {
+    private static async getRemoteUrl () {
       let remoteUrl: string;
       try {
         remoteUrl = await Git.git.remote(['get-url', '--all', 'upstream']) as string;
@@ -67,11 +67,11 @@ export default class Git {
       }
     }
 
-    static getRepoData(): RepoDataType {
+    static getRepoData (): RepoDataType {
       return Git.repoData;
     }
 
-    static async getBranchName(): Promise<string> {
+    static async getBranchName (): Promise<string> {
       return (await Git.git.branch()).current;
     }
 }
