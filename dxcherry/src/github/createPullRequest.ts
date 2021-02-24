@@ -1,20 +1,20 @@
 import { getClient } from './createClient';
 import { getUser } from '../github/getters';
 import { getBranchName } from '../git/branch';
-import { REPO_DATA } from './config';
+import Git from '../git/git';
 import { logInfo, showInfo } from '../info';
 import { PullRequestCreatingError } from '../info/errors/pullRequestCreatingError';
 
 async function setLabels (issueNumber: number, labels: string[]) {
-  await getClient().issues.setLabels(Object.assign({}, REPO_DATA, { issue_number: issueNumber, labels }));
+  await getClient().issues.setLabels(Object.assign({}, Git.getRepoData(), { issue_number: issueNumber, labels }));
 };
 
 async function addAssign (issueNumber: number, assignees: string[]) {
-  await getClient().issues.addAssignees(Object.assign({}, REPO_DATA, { issue_number: issueNumber, assignees }));
+  await getClient().issues.addAssignees(Object.assign({}, Git.getRepoData(), { issue_number: issueNumber, assignees }));
 };
 
 async function addReviewers (pullNumber: number, reviewers: string[]) {
-  await getClient().pulls.requestReviewers(Object.assign({}, REPO_DATA, { pull_number: pullNumber, reviewers }));
+  await getClient().pulls.requestReviewers(Object.assign({}, Git.getRepoData(), { pull_number: pullNumber, reviewers }));
 };
 
 async function createPullRequest ({ title, description, versions, reviewers, labels }: any) {
@@ -27,7 +27,7 @@ async function createPullRequest ({ title, description, versions, reviewers, lab
 
   versions.forEach(async (version: string, index: number) => {
     const payload = Object.assign({},
-      REPO_DATA, {
+      Git.getRepoData(), {
         base: version,
         head: `${login}:${branchWithoutVersion}_${version}`,
         title,

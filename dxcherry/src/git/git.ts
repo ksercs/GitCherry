@@ -5,6 +5,10 @@ import { GITHUB_HTTPS_URL_REGEX, GITHUB_SSH_URL_REGEX } from './constants';
 
 export default class Git {
     private static git: SimpleGit;
+    private static repoData: {
+      repo: string,
+      owner: string
+    };
 
     static async init () {
       const options = {
@@ -15,7 +19,7 @@ export default class Git {
 
       Git.git = simpleGit(options);
       await Git.git.init();
-      Git.getRepoData();
+      await Git.setRepoData();
     }
 
     static async getLastCommit () {
@@ -27,7 +31,11 @@ export default class Git {
       }
     }
 
-    static async getRepoData () {
+    static getRepoData() {
+      return Git.repoData;
+    }
+
+    private static async setRepoData () {
       let remoteUrl: string;
       try {
         remoteUrl = await Git.git.remote(['get-url', '--all', 'upstream']) as string;
@@ -41,10 +49,11 @@ export default class Git {
 
       const repoData = Git.parseURL(remoteUrl);
       if (repoData?.[1] && repoData?.[2]) {
-        return {
+        Git.repoData = {
           owner: repoData[1],
           repo: repoData[2]
         };
+        return;
       }
 
       throw repoNotFoundError;
