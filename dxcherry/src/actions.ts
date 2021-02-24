@@ -1,6 +1,6 @@
-import { getPayload, Payload } from './payload';
-import { TreeDataProvider } from './treeDataProvider';
-import TreeCreator from './treeCreator';
+import { getTreePayload, TreePayload } from './tree/payload';
+import TreeDataProvider from './tree/dataProvider';
+import TreeCreator from './tree/creator';
 import { InputBox, window } from 'vscode';
 import { logInfo } from './info';
 import { processCherryPickRequest } from './processCherryPickRequest';
@@ -8,7 +8,7 @@ import { processCherryPickRequest } from './processCherryPickRequest';
 export class Action {
   static async onStart (treeDataProvider: TreeDataProvider) {
     logInfo('Start pull requests creating');
-    const payload = await getPayload(treeDataProvider);
+    const payload = await getTreePayload(treeDataProvider);
     logInfo(`Payload: ${JSON.stringify(payload)}`);
 
     if (!payload) {
@@ -34,14 +34,14 @@ export class Action {
     logInfo('Title input is shown');
   }
 
-  private static async createDescriptionInput (input: InputBox, payload: Payload) {
+  private static async createDescriptionInput (input: InputBox, payload: TreePayload) {
     logInfo('Description input is created');
     input.value = '';
     input.step = 2;
     input.title = "Enter pull request description";
   }
 
-  private static createTitleInput (payload: Payload) : InputBox {
+  private static createTitleInput (payload: TreePayload) : InputBox {
     const titleInput = window.createInputBox();
 
     titleInput.title = "Enter pull request title";

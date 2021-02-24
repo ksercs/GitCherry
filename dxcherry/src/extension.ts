@@ -1,9 +1,9 @@
 import { commands, ExtensionContext, window } from 'vscode';
-import { TreeDataProvider } from './treeDataProvider';
+import TreeDataProvider from './tree/dataProvider';
 import { Action } from './actions';
-import Storage from './storage';
+import Storage from './reviewers/storage';
 import GithubClient from './github/client';
-import Git from './git/git';
+import Git from './git/client';
 
 export async function activate (context: ExtensionContext) {
   const treeDataProvider = new TreeDataProvider();

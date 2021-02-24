@@ -13,7 +13,7 @@ import {
     PullRequestDataType, 
     RepoDataType
 } from './types';
-import Git from '../git/git';
+import Git from '../git/client';
 
 function getData (res: OctokitResponse<GetResponseDataType>): GetResponseDataType {
     return res.data;

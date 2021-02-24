@@ -23,13 +23,13 @@ export class ExtendedTreeItem extends TreeItem {
 
     if (this.selected) {
       this.iconPath = {
-        light: path.join(__filename, '..', '..', 'resources', 'light', 'checked.svg'),
-        dark: path.join(__filename, '..', '..', 'resources', 'dark', 'checked.svg')
+        light: path.join(__filename, '..', '..', '..', 'resources', 'light', 'checked.svg'),
+        dark: path.join(__filename, '..', '..', '..', 'resources', 'dark', 'checked.svg')
       };
     } else {
       this.iconPath = {
-        light: path.join(__filename, '..', '..', 'resources', 'light', 'unchecked.svg'),
-        dark: path.join(__filename, '..', '..', 'resources', 'dark', 'unchecked.svg')
+        light: path.join(__filename, '..', '..', '..', 'resources', 'light', 'unchecked.svg'),
+        dark: path.join(__filename, '..', '..', '..', 'resources', 'dark', 'unchecked.svg')
       };
     }
   }

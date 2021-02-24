@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { REVIEWER_DATA, USERS_DATA } from '../github/config';
-import Storage, { REVIEWERS } from '../storage';
+import Storage, { REVIEWERS } from './storage';
 import { authentication } from 'vscode';
 import { logInfo } from '../info';
 import { msRefreshError, ownerSquadNotFoundError } from '../info/errors/errors';

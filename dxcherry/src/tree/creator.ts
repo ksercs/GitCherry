@@ -1,17 +1,17 @@
-import { ExtendedTreeItem, REVIEWERS_ROOT_LABEL, LABELS_ROOT_LABEL, VERSION_ROOT_LABEL } from './treeItem';
-import getReviewerPayload from './reviewersData/getReviewerPayload';
-import GithubClient from './github/client';
+import { ExtendedTreeItem, REVIEWERS_ROOT_LABEL, LABELS_ROOT_LABEL, VERSION_ROOT_LABEL } from './item';
+import getReviewerPayload from '../reviewers/getReviewerPayload';
+import GithubClient from '../github/client';
 
 const CHERRY_PICK_LABEL = 'cherry-pick';
 const AUTOMATICALLY_ADDED_LABELS = [CHERRY_PICK_LABEL];
 
 export default class TreeCreator {
-  private static createTreeItem (rootLabel: string, data: Array<any>, nameKey: string = 'name', expanded: boolean = true): ExtendedTreeItem {
+  private static createTreeItem (rootLabel: string, data: any[], nameKey: string = 'name', expanded: boolean = true): ExtendedTreeItem {
     const children = data ? [...data.map(item => TreeCreator.createTreeItem(item[nameKey], item.children, nameKey, item.expanded ?? expanded))] : undefined;
     return new ExtendedTreeItem(rootLabel, children, expanded);
   }
 
-  private static async createLabelsTree (labels: any[], branches: any[]): Promise<ExtendedTreeItem> {
+  private static async createLabelsTree (labels: string[], branches: string[]): Promise<ExtendedTreeItem> {
     return this.createTreeItem(LABELS_ROOT_LABEL, this.filterLabels(labels, branches));
   }
 
@@ -21,7 +21,7 @@ export default class TreeCreator {
     return this.createTreeItem(REVIEWERS_ROOT_LABEL, reviewerPayload, 'name', true);
   }
 
-  private static async createBranchesTree (branches: any[]): Promise<ExtendedTreeItem> {
+  private static async createBranchesTree (branches: string[]): Promise<ExtendedTreeItem> {
     return this.createTreeItem(VERSION_ROOT_LABEL, branches);
   }
 

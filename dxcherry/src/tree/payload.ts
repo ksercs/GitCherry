@@ -1,8 +1,8 @@
-import { TreeDataProvider } from './treeDataProvider';
-import Git from './git/git';
-import { logInfo } from './info';
+import TreeDataProvider from './dataProvider';
+import Git from '../git/client';
+import { logInfo } from '../info';
 
-interface Payload {
+interface TreePayload {
   title: string,
   description: string,
   versions: string[],
@@ -10,7 +10,7 @@ interface Payload {
   labels: string[]
 };
 
-async function getPayload (treeDataProvider: TreeDataProvider): Promise<Payload | undefined> {
+async function getTreePayload (treeDataProvider: TreeDataProvider): Promise<TreePayload | undefined> {
   logInfo('Payload is getting');
 
   const lastCommit = await Git.getLastCommit();
@@ -32,6 +32,6 @@ async function getPayload (treeDataProvider: TreeDataProvider): Promise<Payload 
 }
 
 export {
-    getPayload,
-    Payload
+    getTreePayload,
+    TreePayload
 };

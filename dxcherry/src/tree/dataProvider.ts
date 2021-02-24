@@ -1,9 +1,9 @@
 import { EventEmitter, Event, commands } from 'vscode';
 import * as vscode from 'vscode';
-import { ExtendedTreeItem, REVIEWERS_ROOT_LABEL, LABELS_ROOT_LABEL, VERSION_ROOT_LABEL } from './treeItem';
-import TreeCreator from './treeCreator';
+import { ExtendedTreeItem, REVIEWERS_ROOT_LABEL, LABELS_ROOT_LABEL, VERSION_ROOT_LABEL } from './item';
+import TreeCreator from './creator';
 
-export class TreeDataProvider implements vscode.TreeDataProvider<ExtendedTreeItem> {
+export default class TreeDataProvider implements vscode.TreeDataProvider<ExtendedTreeItem> {
   tree!: ExtendedTreeItem[];
 
   constructor () {

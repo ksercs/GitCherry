@@ -1,10 +1,10 @@
 import GithubClient from './github/client';
-import Git from './git/git';
+import Git from './git/client';
 import { logInfo } from './info';
 import { createPullRequest } from './github/createPullRequest';
-import { Payload } from './payload';
+import { TreePayload } from './tree/payload';
 
-async function processCherryPickRequest ({ title, description, versions, reviewers, labels }: Payload) {
+async function processCherryPickRequest ({ title, description, versions, reviewers, labels }: TreePayload) {
   logInfo(`Prepare data: ${JSON.stringify(arguments)}`);
   const { login } = await GithubClient.getUser();
   const branch = await Git.getBranchName();
