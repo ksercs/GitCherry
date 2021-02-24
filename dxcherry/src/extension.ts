@@ -1,4 +1,3 @@
-// import './github/config'; // NOTE: For process.env configuration
 import { commands, ExtensionContext, window } from 'vscode';
 import { TreeDataProvider } from './treeDataProvider';
 import { Action } from './actions';

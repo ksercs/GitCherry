@@ -1,15 +1,14 @@
-import { payloadGetter } from './payloadGetter';
+import { getPayload, Payload } from './payload';
 import { TreeDataProvider } from './treeDataProvider';
 import TreeCreator from './treeCreator';
 import { InputBox, window } from 'vscode';
-import { Payload } from './payload';
 import { logInfo } from './info';
 import { processCherryPickRequest } from './processCherryPickRequest';
 
 export class Action {
   static async onStart (treeDataProvider: TreeDataProvider) {
     logInfo('Start pull requests creating');
-    const payload = await payloadGetter(treeDataProvider);
+    const payload = await getPayload(treeDataProvider);
     logInfo(`Payload: ${JSON.stringify(payload)}`);
 
     if (!payload) {
