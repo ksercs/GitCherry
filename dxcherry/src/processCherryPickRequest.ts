@@ -1,5 +1,5 @@
 import GithubClient from './github/client';
-import { getBranchName } from './git/branch';
+import Git from './git/git';
 import { logInfo } from './info';
 import { createPullRequest } from './github/createPullRequest';
 import { Payload } from './payload';
@@ -7,9 +7,9 @@ import { Payload } from './payload';
 async function processCherryPickRequest ({ title, description, versions, reviewers, labels }: Payload) {
   logInfo(`Prepare data: ${JSON.stringify(arguments)}`);
   const { login } = await GithubClient.getUser();
-  const branch = await getBranchName();
+  const branch = await Git.getBranchName();
   // TODO: fix regexp and add error
-  const branchWithoutVersion = branch.match('(.*)_[0-9]*_[0-9]*')[1];
+  const branchWithoutVersion = branch.match('(.*)_[0-9]*_[0-9]*')?.[1] || '';
 
   logInfo(`login: ${login}, branch: ${branch}, branchWithoutVersion: ${branchWithoutVersion}`);
 
