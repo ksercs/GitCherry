@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { REVIEWER_DATA } from '../github/config';
+import { REVIEWER_DATA } from './config';
 import Storage, { REVIEWERS } from './storage';
 import { ownerSquadNotFoundError } from '../info/errors/errors';
 import { GithubLoginNotFoundError } from '../info/errors/githubLoginNotFoundError';
 import GithubClient from '../github/client';
 import { Reviewer } from './reviewer';
-import { getSquadData } from './employees';
+import { getSquadData } from './orgstruct';
 
 const TECH_WRITER_ROLE = 'Technical Writer';
 

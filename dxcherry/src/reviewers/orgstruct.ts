@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { authentication } from 'vscode';
 import { logInfo } from '../info';
-import { USERS_DATA } from '../github/config';
+import { USERS_DATA } from './config';
 import { msRefreshError } from '../info/errors/errors';
 
 async function getToken () : Promise<any> {
