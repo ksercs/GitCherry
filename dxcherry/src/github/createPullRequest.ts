@@ -1,7 +1,8 @@
 import GithubClient from './client';
 import { logInfo } from '../info';
+import { TreePayload } from '../tree/payload';
 
-async function createPullRequest (login: string, branchWithoutVersion: string, version: string, title: string, description: string, labels: string[], reviewers: string[]) {
+async function createPullRequest ({ title, description, labels, reviewers}: TreePayload, login: string, branchWithoutVersion: string, version: string) {
   logInfo(`Start PR creating: ${version}`);
 
   const pullRequest = await GithubClient.createPullRequest(login, branchWithoutVersion, version, title, description);

@@ -4,7 +4,7 @@ import { logInfo } from './info';
 import { createPullRequest } from './github/createPullRequest';
 import { TreePayload } from './tree/payload';
 
-async function processCherryPickRequest ({ title, description, versions, reviewers, labels }: TreePayload) {
+async function processCherryPickRequest (payload: TreePayload) {
   logInfo(`Prepare data: ${JSON.stringify(arguments)}`);
   const { login } = await GithubClient.getUser();
   const branch = await Git.getBranchName();
@@ -13,11 +13,11 @@ async function processCherryPickRequest ({ title, description, versions, reviewe
 
   logInfo(`login: ${login}, branch: ${branch}, branchWithoutVersion: ${branchWithoutVersion}`);
 
-  versions.forEach(async (version: string) => {
+  payload.versions.forEach(async (version: string) => {
     // cherry pick here
 
     // TODO: add 'cherry-pick' label to old versions
-    await createPullRequest(login, branchWithoutVersion, version, title, description, labels, reviewers);
+    await createPullRequest(payload, login, branchWithoutVersion, version);
   });
 };
 
