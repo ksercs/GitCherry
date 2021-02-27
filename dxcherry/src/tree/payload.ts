@@ -13,12 +13,13 @@ interface TreePayload {
 async function getTreePayload (treeDataProvider: TreeDataProvider): Promise<TreePayload | undefined> {
   logInfo('Payload is getting');
 
+  // TODO: replace with first commit
   const lastCommit = await Git.getLastCommit();
   logInfo(`Last commit: ${JSON.stringify(lastCommit)}`);
 
   if (!lastCommit) {
-    // TODO: when is there no last commit?
-    // TODO: replace with first commit
+    // NOTE: when we work in empty repo with no commits
+    // TODO: add error
     return;
   }
 
