@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { REVIEWERS_URL } from './config';
-import Storage, { REVIEWERS } from './storage';
+import Storage, { REVIEWERS } from '../storage';
 import { ownerSquadNotFoundError } from '../info/errors/errors';
 import { GithubLoginNotFoundError } from '../info/errors/githubLoginNotFoundError';
 import GithubClient from '../github/client';
