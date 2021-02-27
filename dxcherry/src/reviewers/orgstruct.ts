@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { authentication } from 'vscode';
 import { logInfo } from '../info';
-import { USERS_DATA } from './config';
+import { ORGSTRUCT_AUTH_URL, SQUADS_SOURCE_URL } from './config';
 import { msRefreshError } from '../info/errors/errors';
 
 async function getToken () : Promise<any> {
@@ -10,12 +10,12 @@ async function getToken () : Promise<any> {
   logInfo(JSON.stringify(session.account));
 
   try {
-    const response = await axios.post('https://resolve.devexpress.com/authorize', {
+    const response = await axios.post(ORGSTRUCT_AUTH_URL, {
       access_token: session.accessToken
     }, {
       headers: {
         'Content-Type': 'application/json',
-        Accept: 'application/json'
+        'Accept': 'application/json'
       },
       timeout: 30000
     });
@@ -35,7 +35,7 @@ async function getSquadData () : Promise<any> {
     return {};
   }
 
-  const response = await axios(USERS_DATA.url, {
+  const response = await axios(SQUADS_SOURCE_URL, {
     headers: {
       cookie: `jwt=${token}`
     },

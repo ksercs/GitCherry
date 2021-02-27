@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { REVIEWER_DATA } from './config';
+import { REVIEWERS_URL } from './config';
 import Storage, { REVIEWERS } from './storage';
 import { ownerSquadNotFoundError } from '../info/errors/errors';
 import { GithubLoginNotFoundError } from '../info/errors/githubLoginNotFoundError';
@@ -10,7 +10,7 @@ import { getSquadData } from './orgstruct';
 const TECH_WRITER_ROLE = 'Technical Writer';
 
 async function getAllUsers () : Promise<Reviewer[]> {
-  const response = await axios(REVIEWER_DATA.url);
+  const response = await axios(REVIEWERS_URL);
   return response.data as Reviewer[];
 }
 

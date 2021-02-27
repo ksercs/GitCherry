@@ -13,20 +13,17 @@ const throwIfNot = <T, K extends keyof T>(obj: Partial<T>, prop: K): T[K] => {
   }
 };
 
-['USERS_SOURCE', 'REVIEWERS_SOURCE'].forEach(v => {
+['REVIEWERS_URL', 'ORGSTRUCT_AUTH_URL', 'SQUADS_SOURCE_URL'].forEach(v => {
   throwIfNot(process.env, v);
 });
 
-const REVIEWER_DATA = {
-  url: process.env.REVIEWERS_SOURCE as string
-};
+const REVIEWERS_URL = process.env.REVIEWERS_SOURCE_URL as string;
 
-const USERS_DATA = {
-  url: process.env.USERS_SOURCE as string,
-  jwt: process.env.USER_TOKEN as string
-};
+const ORGSTRUCT_AUTH_URL = process.env.ORGSTRUCT_AUTH_URL as string;
+const SQUADS_SOURCE_URL = process.env.SQUADS_SOURCE_URL as string;
 
 export {
-  REVIEWER_DATA,
-  USERS_DATA
+  REVIEWERS_URL,
+  ORGSTRUCT_AUTH_URL,
+  SQUADS_SOURCE_URL
 };
