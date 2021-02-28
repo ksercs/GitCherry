@@ -17,7 +17,7 @@ const throwIfNot = <T, K extends keyof T>(obj: Partial<T>, prop: K): T[K] => {
   throwIfNot(process.env, v);
 });
 
-const REVIEWERS_URL = process.env.REVIEWERS_SOURCE_URL as string;
+const REVIEWERS_URL = process.env.REVIEWERS_URL as string;
 
 const ORGSTRUCT_AUTH_URL = process.env.ORGSTRUCT_AUTH_URL as string;
 const SQUADS_SOURCE_URL = process.env.SQUADS_SOURCE_URL as string;
