@@ -74,13 +74,13 @@ export default class GithubClient {
       await GithubClient.octokit.pulls.requestReviewers(Object.assign({}, GithubClient.repoData, { pull_number: pullNumber, reviewers }));
     };
 
-    static async createPullRequest (login: string, branch: string, version: string, title: string, body: string): Promise<OctokitResponse<PullRequestDataType>|undefined> {
+    static async createPullRequest (head: string, version: string, title: string, body: string): Promise<OctokitResponse<PullRequestDataType>|undefined> {
       const payload = Object.assign(
         {},
         GithubClient.repoData,
         {
           base: version,
-          head: `${login}:${branch}_${version}`,
+          head,
           title,
           body
         }

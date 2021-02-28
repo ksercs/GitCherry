@@ -5,7 +5,8 @@ import { TreePayload } from '../tree/payload';
 async function createPullRequest ({ title, description, labels, reviewers}: TreePayload, login: string, branchWithoutVersion: string, version: string) {
   logInfo(`Start PR creating: ${version}`);
 
-  const pullRequest = await GithubClient.createPullRequest(login, branchWithoutVersion, version, title, description);
+  const head = `${login}:${branchWithoutVersion}_${version}`;
+  const pullRequest = await GithubClient.createPullRequest(head, version, title, description);
 
   if (pullRequest?.status === 201) {
     const pullRequestNumber = pullRequest.data.number;
