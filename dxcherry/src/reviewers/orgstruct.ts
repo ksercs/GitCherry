@@ -15,7 +15,7 @@ async function getToken () : Promise<any> {
     }, {
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        Accept: 'application/json'
       },
       timeout: 30000
     });
