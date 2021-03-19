@@ -23,18 +23,18 @@ export class ExtendedTreeItem extends TreeItem {
 
     if (this.selected) {
       this.iconPath = {
-        light: path.join(__filename, '..', '..', 'resources', 'light', 'checked.svg'),
-        dark: path.join(__filename, '..', '..', 'resources', 'dark', 'checked.svg')
+        light: path.join(__filename, '..', '..', '..', 'resources', 'light', 'checked.svg'),
+        dark: path.join(__filename, '..', '..', '..', 'resources', 'dark', 'checked.svg')
       };
     } else {
       this.iconPath = {
-        light: path.join(__filename, '..', '..', 'resources', 'light', 'unchecked.svg'),
-        dark: path.join(__filename, '..', '..', 'resources', 'dark', 'unchecked.svg')
+        light: path.join(__filename, '..', '..', '..', 'resources', 'light', 'unchecked.svg'),
+        dark: path.join(__filename, '..', '..', '..', 'resources', 'dark', 'unchecked.svg')
       };
     }
   }
 
-  getSelectedChildrenLabelsArray (): Array<string | undefined> {
+  getSelectedChildrenLabelsArray (): string[] {
     let nodes = [] as Array<ExtendedTreeItem>;
 
     this.children?.forEach(child => {
@@ -47,6 +47,6 @@ export class ExtendedTreeItem extends TreeItem {
       nodes = this.children ?? [];
     }
 
-    return nodes?.filter(node => node.selected).map(node => node.label);
+    return nodes?.filter(node => node.selected).map(node => node.label as string);
   }
 }

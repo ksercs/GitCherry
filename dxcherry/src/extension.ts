@@ -1,19 +1,14 @@
-// import './github/config'; // NOTE: For process.env configuration
-import { setRepoData } from './github/config';
 import { commands, ExtensionContext, window } from 'vscode';
-import { TreeDataProvider } from './treeDataProvider';
+import TreeDataProvider from './tree/dataProvider';
 import { Action } from './actions';
 import Storage from './storage';
-import { createClient } from './github/createClient';
-import Git from './git/git';
+import GithubClient from './github/client';
+import Git from './git/client';
 
 export async function activate (context: ExtensionContext) {
   const treeDataProvider = new TreeDataProvider();
-  await createClient();
   await Git.init();
-  const { owner, repo } = await Git.getRepoData();
-  console.log(owner, repo);
-  setRepoData(owner, repo);
+  await GithubClient.init();
   Storage.setStorage(context.globalState);
 
   window.registerTreeDataProvider('main', treeDataProvider);

@@ -1,16 +1,15 @@
-import { payloadGetter } from './payloadGetter';
-import { TreeDataProvider } from './treeDataProvider';
-import TreeCreator from './treeCreator';
+import { getTreePayload, TreePayload } from './tree/payload';
+import TreeDataProvider from './tree/dataProvider';
+import TreeCreator from './tree/creator';
 import { InputBox, window } from 'vscode';
-import { createPullRequest } from './github/createPullRequest';
-import { Payload } from './payload';
-import log from './log';
+import { logInfo } from './info';
+import { processCherryPickRequest } from './processCherryPickRequest';
 
 export class Action {
   static async onStart (treeDataProvider: TreeDataProvider) {
-    log.appendLine('start creating pull requests');
-    const payload = await payloadGetter(treeDataProvider);
-    log.appendLine(`payload: ${JSON.stringify(payload)}`);
+    logInfo('Start pull requests creating');
+    const payload = await getTreePayload(treeDataProvider);
+    logInfo(`Payload: ${JSON.stringify(payload)}`);
 
     if (!payload) {
       return;
@@ -20,32 +19,32 @@ export class Action {
 
     titleInput.onDidAccept(async () => {
       if (titleInput.step === 1) {
-        log.appendLine(`accepted with title: ${titleInput.value}`);
+        logInfo(`Accepted title: ${titleInput.value}`);
         payload.title = titleInput.value;
         this.createDescriptionInput(titleInput, payload);
       } else {
-        log.appendLine(`accepted with description: ${titleInput.value}`);
+        logInfo(`Accepted description: ${titleInput.value}`);
         payload.description = titleInput.value;
         titleInput.dispose();
-        await createPullRequest(payload);
+        await processCherryPickRequest(payload);
       }
     });
 
     titleInput.show();
-    log.appendLine('titleInput was shown');
+    logInfo('Title input is shown');
   }
 
-  private static async createDescriptionInput (input: InputBox, payload: Payload) {
-    log.appendLine('created description input');
+  private static async createDescriptionInput (input: InputBox, payload: TreePayload) {
+    logInfo('Description input is created');
     input.value = '';
     input.step = 2;
-    input.title = "Enter pull request's description";
+    input.title = 'Enter pull request description';
   }
 
-  private static createTitleInput (payload: Payload) : InputBox {
+  private static createTitleInput (payload: TreePayload) : InputBox {
     const titleInput = window.createInputBox();
 
-    titleInput.title = "Enter pull request's title";
+    titleInput.title = 'Enter pull request title';
     titleInput.value = payload.title;
     titleInput.totalSteps = 2;
     titleInput.step = 1;
@@ -54,10 +53,10 @@ export class Action {
   }
 
   static async onRefresh (treeDataProvider: TreeDataProvider) {
-    log.appendLine('start refreshing');
+    logInfo('Start refreshing');
     treeDataProvider.tree = await TreeCreator.createTree(true);
-    log.appendLine('tree is created');
+    logInfo('Tree is created');
     treeDataProvider.refresh();
-    log.appendLine('tree is refreshed');
+    logInfo('Tree is refreshed');
   }
 }

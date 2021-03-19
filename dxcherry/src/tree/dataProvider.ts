@@ -1,31 +1,31 @@
 import { EventEmitter, Event, commands } from 'vscode';
 import * as vscode from 'vscode';
-import { ExtendedTreeItem, REVIEWERS_ROOT_LABEL, LABELS_ROOT_LABEL, VERSION_ROOT_LABEL } from './treeItem';
-import TreeCreator from './treeCreator';
+import { ExtendedTreeItem, REVIEWERS_ROOT_LABEL, LABELS_ROOT_LABEL, VERSION_ROOT_LABEL } from './item';
+import TreeCreator from './creator';
 
-export class TreeDataProvider implements vscode.TreeDataProvider<ExtendedTreeItem> {
+export default class TreeDataProvider implements vscode.TreeDataProvider<ExtendedTreeItem> {
   tree!: ExtendedTreeItem[];
 
   constructor () {
     commands.registerCommand('treeView.selectTreeItem', (element) => this.onItemClicked(element));
   }
 
-  getSelectedVersions (): Array<string | undefined> {
+  getSelectedVersions (): string[] {
     return this.getSelectedByRootLabel(VERSION_ROOT_LABEL);
   }
 
-  getSelectedReviewers (): Array<string | undefined> {
+  getSelectedReviewers (): string[] {
     return this.getSelectedByRootLabel(REVIEWERS_ROOT_LABEL).map(name => {
-      // don't ask me why
+      // TODO: get rid of it
       return name?.match('\\((.*)$')?.[1].slice(0, -1);
-    });
+    }).filter(item => item !== undefined) as string[];
   }
 
-  getSelectedLabels (): Array<string | undefined> {
+  getSelectedLabels (): string[] {
     return this.getSelectedByRootLabel(LABELS_ROOT_LABEL);
   }
 
-  getSelectedByRootLabel (rootLabel: string): Array<string | undefined> {
+  getSelectedByRootLabel (rootLabel: string): string[] {
     const root = this.getTree(rootLabel);
     return root?.getSelectedChildrenLabelsArray() || [];
   }
