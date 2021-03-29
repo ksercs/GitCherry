@@ -2,14 +2,14 @@ import { getTreePayload, TreePayload } from './tree/payload';
 import TreeDataProvider from './tree/dataProvider';
 import TreeCreator from './tree/creator';
 import { InputBox, window } from 'vscode';
-import { logInfo } from './info';
+import Logger from './info/Logger';
 import { processCherryPickRequest } from './processCherryPickRequest';
 
 export class Action {
   static async onStart (treeDataProvider: TreeDataProvider) {
-    logInfo('Start pull requests creating');
+    Logger.logInfo('Start pull requests creating');
     const payload = await getTreePayload(treeDataProvider);
-    logInfo(`Payload: ${JSON.stringify(payload)}`);
+    Logger.logInfo(`Payload: ${JSON.stringify(payload)}`);
 
     if (!payload) {
       return;
@@ -19,11 +19,11 @@ export class Action {
 
     titleInput.onDidAccept(async () => {
       if (titleInput.step === 1) {
-        logInfo(`Accepted title: ${titleInput.value}`);
+        Logger.logInfo(`Accepted title: ${titleInput.value}`);
         payload.title = titleInput.value;
         this.createDescriptionInput(titleInput, payload);
       } else {
-        logInfo(`Accepted description: ${titleInput.value}`);
+        Logger.logInfo(`Accepted description: ${titleInput.value}`);
         payload.description = titleInput.value;
         titleInput.dispose();
         await processCherryPickRequest(payload);
@@ -31,11 +31,11 @@ export class Action {
     });
 
     titleInput.show();
-    logInfo('Title input is shown');
+    Logger.logInfo('Title input is shown');
   }
 
   private static async createDescriptionInput (input: InputBox, payload: TreePayload) {
-    logInfo('Description input is created');
+    Logger.logInfo('Description input is created');
     input.value = '';
     input.step = 2;
     input.title = 'Enter pull request description';
@@ -53,10 +53,10 @@ export class Action {
   }
 
   static async onRefresh (treeDataProvider: TreeDataProvider) {
-    logInfo('Start refreshing');
+    Logger.logInfo('Start refreshing');
     treeDataProvider.tree = await TreeCreator.createTree(true);
-    logInfo('Tree is created');
+    Logger.logInfo('Tree is created');
     treeDataProvider.refresh();
-    logInfo('Tree is refreshed');
+    Logger.logInfo('Tree is refreshed');
   }
 }

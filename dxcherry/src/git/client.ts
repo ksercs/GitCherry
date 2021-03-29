@@ -1,6 +1,6 @@
 import simpleGit, { SimpleGit } from 'simple-git';
 import { workspace } from 'vscode';
-import { repoNotFoundError, noLastCommitError } from '../info/errors/errors';
+import Logger from '../info/logger';
 import { GITHUB_HTTPS_URL_REGEX, GITHUB_SSH_URL_REGEX } from './constants';
 import { RepoDataType } from '../github/types';
 
@@ -19,7 +19,7 @@ export default class Git {
         return repoData;
       }
 
-      throw repoNotFoundError;
+      Logger.repoNotFoundError();
     }
 
     private static async getRemoteUrl () {
@@ -31,7 +31,7 @@ export default class Git {
       }
 
       if (typeof remoteUrl !== 'string') {
-        throw repoNotFoundError;
+        Logger.repoNotFoundError();
       }
 
       return remoteUrl;
@@ -41,9 +41,9 @@ export default class Git {
       const remoteUrl = await Git.getRemoteUrl();
       const repoData = Git.parseURL(remoteUrl);
       Git.repoData = {
-        owner: repoData[1],
-        repo: repoData[2]
-      };
+        owner: repoData?.[1],
+        repo: repoData?.[2]
+      } as RepoDataType;
     }
 
     static async init () {
@@ -63,7 +63,7 @@ export default class Git {
         const commits = await Git.git.log(['-1']);
         return commits.all[0];
       } catch (err) {
-        noLastCommitError.show();
+        Logger.noLastCommitError();
       }
     }
 
