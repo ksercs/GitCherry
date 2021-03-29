@@ -23,22 +23,25 @@ export default class Git {
     }
 
     private static async getRemoteUrl () {
-      let remoteUrl: string;
+      let remoteUrl: string = '';
       try {
         remoteUrl = await Git.git.remote(['get-url', '--all', 'upstream']) as string;
       } catch (err) {
-        remoteUrl = await Git.git.remote(['get-url', '--all', 'origin']) as string;
+        try {
+          remoteUrl = await Git.git.remote(['get-url', '--all', 'origin']) as string;
+        } catch (e) {}
       }
 
       if (typeof remoteUrl !== 'string') {
         Logger.repoNotFoundError();
+        return;
       }
 
       return remoteUrl;
     }
 
     private static async updateRepoData () {
-      const remoteUrl = await Git.getRemoteUrl();
+      const remoteUrl = await Git.getRemoteUrl() as string;
       const repoData = Git.parseURL(remoteUrl);
       Git.repoData = {
         owner: repoData?.[1],
