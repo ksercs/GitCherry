@@ -2,14 +2,13 @@ import { window } from 'vscode';
 import log from './log';
 
 const ERRORS = {
-    pullRequestCreatingError: `Pull request from $ to $ was not created! $`,
-    githubLoginNotFoundError: `User github login was not found in the database: $`,
-    repoNotFoundError: 'Repository is not found. Check that a git repository is opened.',
-    missingGithubTokenError: 'Missing Github token',
-    missingOctokitClientError: 'Missing octokit client',
-    msRefreshError: 'Something went wrong during refresh. Check you signed in MS corporate account',
-    ownerSquadNotFoundError: 'Owner squad is not found',
-    noLastCommitError: 'No last commit found.Check that a git repository is opened.'
+    PullRequestCreatingError: `Pull request from $ to $ was not created! $`,
+    GithubLoginNotFoundError: `User github login was not found in the database: $`,
+    RepoNotFoundError: 'Repository is not found. Check that a git repository is opened.',
+    MissingGithubTokenError: 'Missing Github token',
+    MsRefreshError: 'Something went wrong during refresh. Check you signed in MS corporate account',
+    OwnerSquadNotFoundError: 'Owner squad is not found',
+    NoLastCommitError: 'No last commit found.Check that a git repository is opened.'
 };
 
 const prepareMessage = (msg: string, args: string[]) => {
@@ -48,7 +47,7 @@ const Logger: any = {
 };
 
 Object.entries(ERRORS).forEach(([name, templateMessage]) => {
-    Logger[name] = (...args: string[]) => {
+    Logger[`show${name}`] = (...args: string[]) => {
         const msg: string = prepareMessage(templateMessage, args);
 
         Logger.logError(msg);

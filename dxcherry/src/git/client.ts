@@ -19,7 +19,7 @@ export default class Git {
         return repoData;
       }
 
-      Logger.repoNotFoundError();
+      Logger.showRepoNotFoundError();
     }
 
     private static async getRemoteUrl () {
@@ -33,7 +33,7 @@ export default class Git {
       }
 
       if (typeof remoteUrl !== 'string') {
-        Logger.repoNotFoundError();
+        Logger.showRepoNotFoundError();
         return;
       }
 
@@ -66,7 +66,7 @@ export default class Git {
         const commits = await Git.git.log(['-1']);
         return commits.all[0];
       } catch (err) {
-        Logger.noLastCommitError();
+        Logger.showNoLastCommitError();
       }
     }
 

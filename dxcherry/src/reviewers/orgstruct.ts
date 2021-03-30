@@ -23,7 +23,7 @@ async function getToken () : Promise<any> {
     return response.data;
   } catch (err) {
     Logger.logInfo(`Token request failed: ${err}`);
-    Logger.msRefreshError();
+    Logger.showMsRefreshError();
   }
 }
 

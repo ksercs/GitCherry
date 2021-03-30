@@ -25,7 +25,7 @@ export default class GithubClient {
       const session = await authentication.getSession('github', ['user', 'repo'], { createIfNone: true });
 
       if (!session) {
-        Logger.missingGithubTokenError();
+        Logger.showMissingGithubTokenError();
       }
 
       return session;
@@ -92,7 +92,7 @@ export default class GithubClient {
 
         return response;
       } catch (e) {
-        Logger.pullRequestCreatingError(payload.head, version, e.errors[0].message ?? 'Check if the branch is correct.');
+        Logger.showPullRequestCreatingError(payload.head, version, e.errors[0].message ?? 'Check if the branch is correct.');
       }
     }
 };

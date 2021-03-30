@@ -20,7 +20,7 @@ function getOwnerData (allUsers : Array<Reviewer>, ownerLogin : string) : Review
     return owner;
   }
 
-  Logger.githubLoginNotFoundError(ownerLogin);
+  Logger.showGithubLoginNotFoundError(ownerLogin);
 }
 
 function getOwnerSquad (users: any, orgUnits: any, owner: Reviewer) : string | undefined {
@@ -28,7 +28,7 @@ function getOwnerSquad (users: any, orgUnits: any, owner: Reviewer) : string | u
   const ownerKey = userKeys.find(key => users[key].email === owner.e);
 
   if (!ownerKey) {
-    Logger.ownerSquadNotFoundError();
+    Logger.showOwnerSquadNotFoundError();
     return;
   }
 
