@@ -29,12 +29,12 @@ export default class Git {
       } catch (err) {
         try {
           remoteUrl = await Git.git.remote(['get-url', '--all', 'origin']) as string;
-        } catch (e) {}
-      }
-
-      if (typeof remoteUrl !== 'string') {
-        Logger.showRepoNotFoundError();
-        return;
+        } catch (e) {
+          if (typeof remoteUrl !== 'string') {
+            Logger.showRepoNotFoundError();
+            return;
+          }
+        }
       }
 
       return remoteUrl;
