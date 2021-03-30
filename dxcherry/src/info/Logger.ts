@@ -5,10 +5,10 @@ const ERRORS = {
   PullRequestCreatingError: 'Pull request from $ to $ was not created! $',
   GithubLoginNotFoundError: 'User github login was not found in the database: $',
   RepoNotFoundError: 'Repository is not found. Check that a git repository is opened.',
-  MissingGithubTokenError: 'Missing Github token',
-  MsRefreshError: 'Something went wrong during refresh. Check you signed in MS corporate account',
-  OwnerSquadNotFoundError: 'Owner squad is not found',
-  NoLastCommitError: 'No last commit found.Check that a git repository is opened.'
+  MissingGithubTokenError: 'Missing Github token.',
+  MsRefreshError: 'Something went wrong during refresh. Check you signed in MS corporate account.',
+  OwnerSquadNotFoundError: 'Owner squad is not found.',
+  NoLastCommitError: 'No last commit found. Check that a git repository is opened.'
 };
 
 const prepareMessage = (msg: string, args: string[]) => {
