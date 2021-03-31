@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { REVIEWERS_URL } from './config';
 import Storage, { REVIEWERS } from '../storage';
-import { ownerSquadNotFoundError } from '../info/errors/errors';
-import { GithubLoginNotFoundError } from '../info/errors/githubLoginNotFoundError';
+import Logger from '../info/logger';
 import GithubClient from '../github/client';
 import { Reviewer } from './reviewer';
 import { getSquadData } from './orgstruct';
@@ -14,22 +13,23 @@ async function getAllUsers () : Promise<Reviewer[]> {
   return response.data as Reviewer[];
 }
 
-function getOwnerData (allUsers : Array<Reviewer>, ownerLogin : string) : Reviewer {
+function getOwnerData (allUsers : Array<Reviewer>, ownerLogin : string) : Reviewer | undefined {
   const owner = allUsers.find(user => user.gh === ownerLogin);
 
   if (owner) {
     return owner;
   }
 
-  throw new GithubLoginNotFoundError(ownerLogin);
+  Logger.showGithubLoginNotFoundError(ownerLogin);
 }
 
-function getOwnerSquad (users: any, orgUnits: any, owner: Reviewer) : string {
+function getOwnerSquad (users: any, orgUnits: any, owner: Reviewer) : string | undefined {
   const userKeys = Object.keys(users);
   const ownerKey = userKeys.find(key => users[key].email === owner.e);
 
   if (!ownerKey) {
-    throw ownerSquadNotFoundError;
+    Logger.showOwnerSquadNotFoundError();
+    return;
   }
 
   const ownerData = users[ownerKey];
@@ -52,7 +52,7 @@ function getSquad (userData: any, orgUnits: any) : any {
 async function createReviewerPayload () : Promise<string[]> {
   const { login } = await GithubClient.getUser();
   const allUsers = await getAllUsers();
-  const owner = getOwnerData(allUsers, login);
+  const owner = getOwnerData(allUsers, login) as Reviewer;
   const result = [] as any[];
 
   const tribeUsers = allUsers.filter(user => user.t === owner.t);

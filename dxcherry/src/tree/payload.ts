@@ -1,6 +1,6 @@
 import TreeDataProvider from './dataProvider';
 import Git from '../git/client';
-import { logInfo } from '../info';
+import Logger from '../info/Logger';
 
 interface TreePayload {
   title: string,
@@ -11,11 +11,11 @@ interface TreePayload {
 };
 
 async function getTreePayload (treeDataProvider: TreeDataProvider): Promise<TreePayload | undefined> {
-  logInfo('Payload is getting');
+  Logger.logInfo('Payload is getting');
 
   // TODO: replace with first commit
   const lastCommit = await Git.getLastCommit();
-  logInfo(`Last commit: ${JSON.stringify(lastCommit)}`);
+  Logger.logInfo(`Last commit: ${JSON.stringify(lastCommit)}`);
 
   if (!lastCommit) {
     // NOTE: when we work in empty repo with no commits

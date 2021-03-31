@@ -1,9 +1,7 @@
 import { Octokit } from '@octokit/rest';
 import { OctokitResponse } from '@octokit/types';
 import { authentication, AuthenticationSession } from 'vscode';
-import { showInfo, logInfo } from '../info';
-import { missingGithubTokenError } from '../info/errors/errors';
-import { PullRequestCreatingError } from '../info/errors/pullRequestCreatingError';
+import Logger from '../info/logger';
 import {
   GetResponseDataType,
   LabelsDataType,
@@ -27,8 +25,7 @@ export default class GithubClient {
       const session = await authentication.getSession('github', ['user', 'repo'], { createIfNone: true });
 
       if (!session) {
-        missingGithubTokenError.show();
-        missingGithubTokenError.log();
+        Logger.showMissingGithubTokenError();
       }
 
       return session;
@@ -42,8 +39,8 @@ export default class GithubClient {
       });
       GithubClient.repoData = Git.getRepoData();
 
-      showInfo(`You are logged in GitHub as ${session.account.label}`);
-      logInfo(`Github login: ${session.account.label}`);
+      Logger.showInfo(`You are logged in GitHub as ${session.account.label}`);
+      Logger.logInfo(`Github login: ${session.account.label}`);
     }
 
     static async getLabels (): Promise<LabelsDataType> {
@@ -85,20 +82,17 @@ export default class GithubClient {
           body
         }
       );
-      logInfo(`Pull request creating payload: ${JSON.stringify(payload)}`);
+      Logger.logInfo(`Pull request creating payload: ${JSON.stringify(payload)}`);
 
       try {
         const response = await GithubClient.octokit.pulls.create(payload);
 
-        logInfo('Pull request is created');
-        showInfo(`Pull request from ${payload.head} to ${version} was successfully created`);
+        Logger.logInfo('Pull request is created');
+        Logger.showInfo(`Pull request from ${payload.head} to ${version} was successfully created`);
 
         return response;
       } catch (e) {
-        // TODO: add e.message showing
-        logInfo(e);
-        const creatingError = new PullRequestCreatingError(payload.head, version);
-        creatingError.show();
+        Logger.showPullRequestCreatingError(payload.head, version, e.errors[0].message ?? 'Check if the branch is correct.');
       }
     }
 };

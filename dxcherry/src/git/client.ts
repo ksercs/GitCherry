@@ -1,6 +1,6 @@
 import simpleGit, { SimpleGit } from 'simple-git';
 import { workspace } from 'vscode';
-import { repoNotFoundError, noLastCommitError } from '../info/errors/errors';
+import Logger from '../info/logger';
 import { GITHUB_HTTPS_URL_REGEX, GITHUB_SSH_URL_REGEX } from './constants';
 import { RepoDataType } from '../github/types';
 
@@ -19,31 +19,34 @@ export default class Git {
         return repoData;
       }
 
-      throw repoNotFoundError;
+      Logger.showRepoNotFoundError();
     }
 
     private static async getRemoteUrl () {
-      let remoteUrl: string;
+      let remoteUrl: string = '';
       try {
         remoteUrl = await Git.git.remote(['get-url', '--all', 'upstream']) as string;
       } catch (err) {
-        remoteUrl = await Git.git.remote(['get-url', '--all', 'origin']) as string;
-      }
-
-      if (typeof remoteUrl !== 'string') {
-        throw repoNotFoundError;
+        try {
+          remoteUrl = await Git.git.remote(['get-url', '--all', 'origin']) as string;
+        } catch (e) {
+          if (typeof remoteUrl !== 'string') {
+            Logger.showRepoNotFoundError();
+            return;
+          }
+        }
       }
 
       return remoteUrl;
     }
 
     private static async updateRepoData () {
-      const remoteUrl = await Git.getRemoteUrl();
+      const remoteUrl = await Git.getRemoteUrl() as string;
       const repoData = Git.parseURL(remoteUrl);
       Git.repoData = {
-        owner: repoData[1],
-        repo: repoData[2]
-      };
+        owner: repoData?.[1],
+        repo: repoData?.[2]
+      } as RepoDataType;
     }
 
     static async init () {
@@ -63,7 +66,7 @@ export default class Git {
         const commits = await Git.git.log(['-1']);
         return commits.all[0];
       } catch (err) {
-        noLastCommitError.show();
+        Logger.showNoLastCommitError();
       }
     }
 
