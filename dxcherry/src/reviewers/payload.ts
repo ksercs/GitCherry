@@ -4,7 +4,6 @@ import Storage, { REVIEWERS } from '../storage';
 import Logger from '../info/logger';
 import GithubClient from '../github/client';
 import { Reviewer } from './reviewer';
-import { getSquadData } from './orgstruct';
 
 const TECH_WRITER_ROLE = 'Technical Writer';
 
@@ -23,79 +22,43 @@ function getOwnerData (allUsers : Array<Reviewer>, ownerLogin : string) : Review
   Logger.showGithubLoginNotFoundError(ownerLogin);
 }
 
-function getOwnerSquad (users: any, orgUnits: any, owner: Reviewer) : string | undefined {
-  const userKeys = Object.keys(users);
-  const ownerKey = userKeys.find(key => users[key].email === owner.e);
-
-  if (!ownerKey) {
-    Logger.showOwnerSquadNotFoundError();
-    return;
-  }
-
-  const ownerData = users[ownerKey];
-  const squad = getSquad(ownerData, orgUnits);
-
-  return squad.name;
-}
-
-function getSquad (userData: any, orgUnits: any) : any {
-  if (userData.roles.includes(TECH_WRITER_ROLE)) {
-    return {
-      name: TECH_WRITER_ROLE
-    };
-  }
-
-  const squadKey = userData.hierarchies.squad?.find((key: string) => !orgUnits[key].isDeleted);
-  return orgUnits[squadKey];
+function getUserSquad (user: Reviewer) : string {
+  // all techwriters are in the one pseudosquad named by their role
+  // if user has no squad - use pseudosquad 'Other'
+  return (user.po === TECH_WRITER_ROLE ? user.po : user.sq) || 'Other';
 }
 
 async function createReviewerPayload () : Promise<string[]> {
   const { login } = await GithubClient.getUser();
   const allUsers = await getAllUsers();
   const owner = getOwnerData(allUsers, login) as Reviewer;
-  const result = [] as any[];
-
-  const tribeUsers = allUsers.filter(user => user.t === owner.t);
-  const { users, orgUnits } = await getSquadData();
-  const userKeys = Object.keys(users);
-  const ownerSquad = getOwnerSquad(users, orgUnits, owner);
-
-  result.push({
-    name: ownerSquad,
+  // owner's squad should be the first node
+  const result: any[] = [{
+    name: owner.sq,
     children: [],
     expanded: true
-  });
+  }];
+  // get users from tribe (except owner)
+  const tribeUsers = allUsers.filter(user => user.t === owner.t && user.e !== owner.e);
 
+  // create tribe tree (result -> squads -> members)
   tribeUsers.forEach(user => {
-    if (user.gh === login) {
-      return;
-    }
+    const userSquad = getUserSquad(user);
+    let squadData = result.find((e: any) => e.name === userSquad);
 
-    const userKey = userKeys.find(key => users[key].email === user.e);
-    const userData = userKey && users[userKey];
-
-    if (!userData) {
-      return;
-    }
-
-    const squad = getSquad(userData, orgUnits);
-
-    const squadName = squad?.name || 'Other';
-    const squadData = result.find((e: any) => e.name === squadName);
-
-    if (squadData) {
-      squadData.children.push({
-        name: `${user.l} ${user.f} (${user.gh})`
-      });
-    } else {
-      result.push({
-        name: squadName,
-        children: [{
-          name: `${user.l} ${user.f} (${user.gh})`
-        }],
+    if (!squadData) {
+      squadData = {
+        name: userSquad,
+        children: [],
         expanded: false
-      });
+      };
+
+      result.push(squadData);
     }
+
+    squadData.children.push({
+      name: `${user.l} ${user.f} (${user.gh})`
+    });
   });
 
   return result;

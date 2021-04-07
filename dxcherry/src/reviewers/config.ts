@@ -13,7 +13,7 @@ const throwIfNot = <T, K extends keyof T>(obj: Partial<T>, prop: K): T[K] => {
   }
 };
 
-['REVIEWERS_URL', 'ORGSTRUCT_AUTH_URL', 'SQUADS_SOURCE_URL'].forEach(v => {
+['REVIEWERS_URL'].forEach(v => {
   throwIfNot(process.env, v);
 });
 
