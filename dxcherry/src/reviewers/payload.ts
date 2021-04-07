@@ -28,10 +28,15 @@ function getUserSquad (user: Reviewer) : string {
   return (user.po === TECH_WRITER_ROLE ? user.po : user.sq) || 'Other';
 }
 
+function getUserTribe (user: Reviewer) : string {
+  return user.t || user.tb || 'Other';
+}
+
 async function createReviewerPayload () : Promise<string[]> {
   const { login } = await GithubClient.getUser();
   const allUsers = await getAllUsers();
   const owner = getOwnerData(allUsers, login) as Reviewer;
+  const ownerTribe = getUserTribe(owner);
   // owner's squad should be the first node
   const result: any[] = [{
     name: owner.sq,
@@ -39,7 +44,7 @@ async function createReviewerPayload () : Promise<string[]> {
     expanded: true
   }];
   // get users from tribe (except owner)
-  const tribeUsers = allUsers.filter(user => user.t === owner.t && user.e !== owner.e);
+  const tribeUsers = allUsers.filter(user => getUserTribe(user) === ownerTribe && user.e !== owner.e);
 
   // create tribe tree (result -> squads -> members)
   tribeUsers.forEach(user => {
