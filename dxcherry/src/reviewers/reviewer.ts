@@ -1,9 +1,18 @@
 interface Reviewer {
-    l: string,
-    f: string,
-    gh: string,
-    e: string,
-    t: string
+  // last name
+  l: string,
+  // first name
+  f: string,
+  // GitHub nickname
+  gh: string,
+  // email
+  e: string,
+  // tribe
+  t: string,
+  // squad
+  sq: string,
+  // position
+  po: string
 };
 
 export {
