@@ -13,18 +13,16 @@ interface TreePayload {
 async function getTreePayload (treeDataProvider: TreeDataProvider): Promise<TreePayload | undefined> {
   Logger.logInfo('Payload is getting');
 
-  // TODO: replace with first commit
-  const lastCommit = await Git.getLastCommit();
-  Logger.logInfo(`Last commit: ${JSON.stringify(lastCommit)}`);
+  const firstCommit = await Git.getFirstCommit();
+  Logger.logInfo(`First commit: ${JSON.stringify(firstCommit)}`);
 
-  if (!lastCommit) {
-    // NOTE: when we work in empty repo with no commits
-    // TODO: add error
+  if (!firstCommit) {
+    Logger.showNoCommitInBranchError(Git.getBranchName());
     return;
   }
 
   return {
-    title: lastCommit.message,
+    title: firstCommit.message,
     description: '',
     versions: treeDataProvider.getSelectedVersions(),
     reviewers: treeDataProvider.getSelectedReviewers(),

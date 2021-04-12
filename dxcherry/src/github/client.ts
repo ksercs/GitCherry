@@ -1,6 +1,6 @@
 import { Octokit } from '@octokit/rest';
 import { OctokitResponse } from '@octokit/types';
-import { authentication, AuthenticationSession } from 'vscode';
+import { authentication, AuthenticationSession, env, Uri } from 'vscode';
 import Logger from '../info/logger';
 import {
   GetResponseDataType,
@@ -86,9 +86,10 @@ export default class GithubClient {
 
       try {
         const response = await GithubClient.octokit.pulls.create(payload);
+        const url = response.data.html_url;
 
         Logger.logInfo('Pull request is created');
-        Logger.showInfo(`Pull request from ${payload.head} to ${version} was successfully created`);
+        Logger.showPullRequestCreatingMessage(`Pull request from ${payload.head} to ${version} was successfully created`, url);
 
         return response;
       } catch (e) {

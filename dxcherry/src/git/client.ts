@@ -1,12 +1,13 @@
 import simpleGit, { SimpleGit } from 'simple-git';
 import { workspace } from 'vscode';
 import Logger from '../info/logger';
-import { GITHUB_HTTPS_URL_REGEX, GITHUB_SSH_URL_REGEX } from './constants';
+import { GITHUB_HTTPS_URL_REGEX, GITHUB_SSH_URL_REGEX, BRANCH_REGEX } from './constants';
 import { RepoDataType } from '../github/types';
 
 export default class Git {
     private static git: SimpleGit;
     private static repoData: RepoDataType;
+    private static remote: string;
 
     private static parseURL (url: string) {
       let repoData = url.match(GITHUB_HTTPS_URL_REGEX);
@@ -26,9 +27,11 @@ export default class Git {
       let remoteUrl: string = '';
       try {
         remoteUrl = await Git.git.remote(['get-url', '--all', 'upstream']) as string;
+        Git.remote = 'upstream';
       } catch (err) {
         try {
           remoteUrl = await Git.git.remote(['get-url', '--all', 'origin']) as string;
+          Git.remote = 'origin';
         } catch (e) {
           if (typeof remoteUrl !== 'string') {
             Logger.showRepoNotFoundError();
@@ -61,10 +64,12 @@ export default class Git {
       await Git.updateRepoData();
     }
 
-    static async getLastCommit () {
+    static async getFirstCommit () {
       try {
-        const commits = await Git.git.log(['-1']);
-        return commits.all[0];
+        const currentBranch = await Git.getBranchName();
+        const remoteBranch = `${Git.remote}/${Git.parseBranch(currentBranch)[1]}`; 
+        const commits = await Git.git.log({ from: remoteBranch, to: currentBranch});
+        return commits.all[commits.all.length - 1];
       } catch (err) {
         Logger.showNoLastCommitError();
       }
@@ -77,4 +82,14 @@ export default class Git {
     static async getBranchName (): Promise<string> {
       return (await Git.git.branch()).current;
     }
+
+    static parseBranch(branch: string): [string, string] {    
+      if (!BRANCH_REGEX.test(branch)) {
+        Logger.showIncorrectBranchNameError(branch);
+        throw Error('Incorrect branch name');
+      }
+    
+      const parsedBranchName = branch.match(BRANCH_REGEX) as RegExpMatchArray;
+      return [parsedBranchName[1], parsedBranchName[2]];
+    };
 }

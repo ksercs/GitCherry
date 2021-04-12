@@ -1,4 +1,4 @@
-import { window } from 'vscode';
+import { window, env, Uri, MessageItem } from 'vscode';
 import log from './log';
 
 const ERRORS = {
@@ -8,7 +8,9 @@ const ERRORS = {
   MissingGithubTokenError: 'Missing Github token.',
   MsRefreshError: 'Something went wrong during refresh. Check you signed in MS corporate account.',
   OwnerSquadNotFoundError: 'Owner squad is not found.',
-  NoLastCommitError: 'No last commit found. Check that a git repository is opened.'
+  NoLastCommitError: 'No last commit found. Check that a git repository is opened.',
+  IncorrectBranchNameError: '"$" is not correct branch name. Name your branch as *name_XX_X* (eg "branch_20_1")',
+  NoCommitInBranchError: 'There is no new commits in "$" branch'
 };
 
 const prepareMessage = (msg: string, args: string[]) => {
@@ -43,6 +45,12 @@ const Logger: any = {
 
   logInfo: (msg: string) => {
     log.appendLine(`INFO: ${msg}`);
+  },
+
+  showPullRequestCreatingMessage: (msg: string, url: string) => {
+    window.showInformationMessage(msg, 'Open').then(() => {
+      env.openExternal(Uri.parse(url));
+    });
   }
 };
 
