@@ -18,8 +18,7 @@ async function getTreePayload (treeDataProvider: TreeDataProvider): Promise<Tree
   Logger.logInfo(`Last commit: ${JSON.stringify(lastCommit)}`);
 
   if (!lastCommit) {
-    // NOTE: when we work in empty repo with no commits
-    // TODO: add error
+    Logger.showNoCommitInBranchError(Git.getBranchName());
     return;
   }
 

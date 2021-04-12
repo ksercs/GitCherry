@@ -9,7 +9,8 @@ const ERRORS = {
   MsRefreshError: 'Something went wrong during refresh. Check you signed in MS corporate account.',
   OwnerSquadNotFoundError: 'Owner squad is not found.',
   NoLastCommitError: 'No last commit found. Check that a git repository is opened.',
-  IncorrectBranchNameError: '"$" is not correct branch name. Name your branch as *name_XX_X* (eg "branch_20_1")'
+  IncorrectBranchNameError: '"$" is not correct branch name. Name your branch as *name_XX_X* (eg "branch_20_1")',
+  NoCommitInBranchError: 'There is no new commits in "$" branch'
 };
 
 const prepareMessage = (msg: string, args: string[]) => {
