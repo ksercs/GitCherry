@@ -1,4 +1,4 @@
-import { window } from 'vscode';
+import { window, env, Uri, MessageItem } from 'vscode';
 import log from './log';
 
 const ERRORS = {
@@ -43,6 +43,12 @@ const Logger: any = {
 
   logInfo: (msg: string) => {
     log.appendLine(`INFO: ${msg}`);
+  },
+
+  showPullRequestCreatingMessage: (msg: string, url: string) => {
+    window.showInformationMessage(msg, 'Open').then(() => {
+      env.openExternal(Uri.parse(url));
+    });
   }
 };
 
