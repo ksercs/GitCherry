@@ -8,7 +8,8 @@ const ERRORS = {
   MissingGithubTokenError: 'Missing Github token.',
   MsRefreshError: 'Something went wrong during refresh. Check you signed in MS corporate account.',
   OwnerSquadNotFoundError: 'Owner squad is not found.',
-  NoLastCommitError: 'No last commit found. Check that a git repository is opened.'
+  NoLastCommitError: 'No last commit found. Check that a git repository is opened.',
+  IncorrectBranchNameError: '"$" is not correct branch name. Name your branch as *name_XX_X* (eg "branch_20_1")'
 };
 
 const prepareMessage = (msg: string, args: string[]) => {

@@ -1,7 +1,7 @@
 import simpleGit, { SimpleGit } from 'simple-git';
 import { workspace } from 'vscode';
 import Logger from '../info/logger';
-import { GITHUB_HTTPS_URL_REGEX, GITHUB_SSH_URL_REGEX } from './constants';
+import { GITHUB_HTTPS_URL_REGEX, GITHUB_SSH_URL_REGEX, BRANCH_REGEX } from './constants';
 import { RepoDataType } from '../github/types';
 
 export default class Git {
@@ -77,4 +77,14 @@ export default class Git {
     static async getBranchName (): Promise<string> {
       return (await Git.git.branch()).current;
     }
+
+    static parseBranch(branch: string): [string, string] {    
+      if (!BRANCH_REGEX.test(branch)) {
+        Logger.showIncorrectBranchNameError(branch);
+        throw Error('Incorrect branch name');
+      }
+    
+      const parsedBranchName = branch.match(BRANCH_REGEX) as RegExpMatchArray;
+      return [parsedBranchName[1], parsedBranchName[2]];
+    };
 }
