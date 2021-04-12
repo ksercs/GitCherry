@@ -8,7 +8,9 @@ interface Reviewer {
   // email
   e: string,
   // tribe
-  t: string,
+  t?: string,
+  // tribe
+  tb?: string,
   // squad
   sq: string,
   // position
