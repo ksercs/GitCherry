@@ -75,6 +75,17 @@ export default class Git {
       }
     }
 
+    static async getLastCommit () {
+      try {
+        const currentBranch = await Git.getBranchName();
+        const remoteBranch = `${Git.remote}/${Git.parseBranch(currentBranch)[1]}`; 
+        const commits = await Git.git.log({ from: remoteBranch, to: currentBranch});
+        return commits.all[0];
+      } catch (err) {
+        Logger.logError('no last commit');
+      }
+    }
+
     static getRepoData (): RepoDataType {
       return Git.repoData;
     }
@@ -92,4 +103,39 @@ export default class Git {
       const parsedBranchName = branch.match(BRANCH_REGEX) as RegExpMatchArray;
       return [parsedBranchName[1], parsedBranchName[2]];
     };
+
+    static async push () {
+      const currentBranch = await Git.getBranchName();
+      Logger.logInfo(`git push ${currentBranch}`);
+      await Git.git.push('origin', currentBranch);
+    } 
+
+    static async fetch (version: string) {
+      Logger.logInfo(`git fetch ${Git.remote} ${version}`);
+      await Git.git.fetch(Git.remote, version);
+    }
+
+    static async branchOut (version: string, branchWithoutVersion: string) {
+      Logger.logInfo(`git checkout ${Git.remote}/${version}`);
+      await Git.git.checkout(`${Git.remote}/${version}`);
+      Logger.logInfo(`git checkout -b ${branchWithoutVersion}_${version}`);
+      await Git.git.checkout(['-b', `${branchWithoutVersion}_${version}`]);
+      Logger.logInfo(`now at branch: ${await Git.getBranchName()}`);
+    }
+
+    static async checkOut (version: string, branchWithoutVersion: string) {
+      Logger.logInfo(`git checkout ${branchWithoutVersion}_${version}`);
+      await Git.git.checkout(`${branchWithoutVersion}_${version}`);
+      Logger.logInfo(`now at branch: ${await Git.getBranchName()}`);
+    }
+
+    static async cherryPick (firstCommit: string, lastCommit: string) {
+      if (firstCommit === lastCommit) {
+        Logger.logInfo(`git cherry-pick ${firstCommit}`);
+        Git.git.raw(['cherry-pick', firstCommit]);
+      } else {
+        Logger.logInfo(`git cherry-pick ${firstCommit}..${lastCommit}`);
+        Git.git.raw(['cherry-pick', `${firstCommit}..${lastCommit}`]);
+      }
+    }
 }
