@@ -1,5 +1,0 @@
-*.sh
-env.js
-open_PR.js
-tasks.json
-.gitignore
