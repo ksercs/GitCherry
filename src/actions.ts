@@ -4,14 +4,15 @@ import TreeCreator from './tree/creator';
 import { InputBox, window } from 'vscode';
 import Logger from './info/Logger';
 import { processCherryPickRequest } from './processCherryPickRequest';
+import { pushAndCreatePullRequests } from './processPullRequests';
+import Git from './git/client';
 
 export class Action {
-  static async onStart (treeDataProvider: TreeDataProvider) {
-    Logger.logInfo('Start pull requests creating');
+  static async onPullRequest (treeDataProvider: TreeDataProvider) {
     const payload = await getTreePayload(treeDataProvider);
-    Logger.logInfo(`Payload: ${JSON.stringify(payload)}`);
 
     if (!payload) {
+      Logger.logError('no payload');
       return;
     }
 
@@ -26,7 +27,7 @@ export class Action {
         Logger.logInfo(`Accepted description: ${titleInput.value}`);
         payload.description = titleInput.value;
         titleInput.dispose();
-        await processCherryPickRequest(payload);
+        await pushAndCreatePullRequests(payload);
       }
     });
 
@@ -58,5 +59,18 @@ export class Action {
     Logger.logInfo('Tree is created');
     treeDataProvider.refresh();
     Logger.logInfo('Tree is refreshed');
+  }
+
+  static async onContinue () {
+    await Git.continueCherryPick();
+  }
+
+  static async onAbortCherryPick () {
+    await Git.abortCherryPicking();
+  }
+
+  static async onCherryPick (treeDataProvider: TreeDataProvider) {
+    const payload = await getTreePayload(treeDataProvider);
+    await processCherryPickRequest(payload as TreePayload);
   }
 }

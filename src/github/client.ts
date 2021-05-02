@@ -1,6 +1,6 @@
 import { Octokit } from '@octokit/rest';
 import { OctokitResponse } from '@octokit/types';
-import { authentication, AuthenticationSession, env, Uri } from 'vscode';
+import { authentication, AuthenticationSession } from 'vscode';
 import Logger from '../info/logger';
 import {
   GetResponseDataType,
@@ -71,12 +71,12 @@ export default class GithubClient {
       await GithubClient.octokit.pulls.requestReviewers(Object.assign({}, GithubClient.repoData, { pull_number: pullNumber, reviewers }));
     };
 
-    static async createPullRequest (head: string, version: string, title: string, body: string): Promise<OctokitResponse<PullRequestDataType>|undefined> {
+    static async createPullRequest (head: string, upstreamBranch: string, title: string, body: string): Promise<OctokitResponse<PullRequestDataType>|undefined> {
       const payload = Object.assign(
         {},
         GithubClient.repoData,
         {
-          base: version,
+          base: upstreamBranch,
           head,
           title,
           body
@@ -89,11 +89,12 @@ export default class GithubClient {
         const url = response.data.html_url;
 
         Logger.logInfo('Pull request is created');
-        Logger.showPullRequestCreatingMessage(`Pull request from ${payload.head} to ${version} was successfully created`, url);
+        Logger.showPullRequestCreatingMessage(`Pull request from ${payload.head} to ${upstreamBranch} was successfully created`, url);
 
         return response;
       } catch (e) {
-        Logger.showPullRequestCreatingError(payload.head, version, e.errors[0].message ?? 'Check if the branch is correct.');
+        Logger.logWarning(e.errors[0].message);
+        Logger.showWarning(e.errors[0].message);
       }
     }
 };

@@ -1,7 +1,7 @@
 import { TreeItem, TreeItemCollapsibleState } from 'vscode';
 import * as path from 'path';
 
-export const VERSION_ROOT_LABEL = 'Upstream branches';
+export const UPSTREAM_ROOT_LABEL = 'Upstream branches';
 export const REVIEWERS_ROOT_LABEL = 'Reviewers';
 export const LABELS_ROOT_LABEL = 'Labels';
 

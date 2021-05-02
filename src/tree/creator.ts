@@ -1,4 +1,4 @@
-import { ExtendedTreeItem, REVIEWERS_ROOT_LABEL, LABELS_ROOT_LABEL, VERSION_ROOT_LABEL } from './item';
+import { ExtendedTreeItem, REVIEWERS_ROOT_LABEL, LABELS_ROOT_LABEL, UPSTREAM_ROOT_LABEL } from './item';
 import { getReviewersPayload } from '../reviewers/payload';
 import GithubClient from '../github/client';
 
@@ -22,7 +22,7 @@ export default class TreeCreator {
   }
 
   private static async createBranchesTree (branches: string[]): Promise<ExtendedTreeItem> {
-    return this.createTreeItem(VERSION_ROOT_LABEL, branches);
+    return this.createTreeItem(UPSTREAM_ROOT_LABEL, branches);
   }
 
   private static filterLabels (labels: Array<any>, branches: Array<any>): Array<any> {

@@ -12,6 +12,9 @@ export async function activate (context: ExtensionContext) {
   Storage.setStorage(context.globalState);
 
   window.registerTreeDataProvider('main', treeDataProvider);
-  commands.registerCommand('start', () => Action.onStart(treeDataProvider));
+  commands.registerCommand('pull_request', () => Action.onPullRequest(treeDataProvider));
+  commands.registerCommand('cherry_pick', () => Action.onCherryPick(treeDataProvider));
   commands.registerCommand('refresh', () => Action.onRefresh(treeDataProvider));
+  commands.registerCommand('continue', () => Action.onContinue());
+  commands.registerCommand('abort_cherry_pick', () => Action.onAbortCherryPick());
 }

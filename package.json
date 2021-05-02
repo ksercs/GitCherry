@@ -35,7 +35,7 @@
 		},
 		"commands": [
 			{
-				"command": "start",
+				"command": "pull_request",
 				"title": "Create pull requests",
 				"icon": {
 					"light": "resources/light/start.svg",
@@ -49,12 +49,36 @@
 					"light": "resources/light/refresh.svg",
 					"dark": "resources/dark/refresh.svg"
 				}
+			},
+			{
+				"command": "continue",
+				"title": "Continue cherry-picking",
+				"icon": {
+					"light": "resources/light/continue.svg",
+					"dark": "resources/dark/continue.svg"
+				}
+			},
+			{
+				"command": "cherry_pick",
+				"title": "Cherry-pick",
+				"icon": {
+					"light": "resources/light/cherry.svg",
+					"dark": "resources/dark/cherry.svg"
+				}
+			},
+			{
+				"command": "abort_cherry_pick",
+				"title": "Abort cherry-picking",
+				"icon": {
+					"light": "resources/light/abort.svg",
+					"dark": "resources/dark/abort.svg"
+				}
 			}
 		],
 		"menus": {
 			"view/title": [
 				{
-					"command": "start",
+					"command": "pull_request",
 					"group": "navigation",
 					"when": "view == main"
 				},
@@ -62,6 +86,21 @@
 					"command": "refresh",
 					"group": "navigation",
 					"when": "view == main"
+				},
+				{
+					"command": "continue",
+					"group": "navigation",
+					"when": "view == main && isMergeConflict == true"
+				},
+				{
+					"command": "abort_cherry_pick",
+					"group": "navigation",
+					"when": "view == main && isMergeConflict == true"
+				},
+				{
+					"command": "cherry_pick",
+					"group": "navigation",
+					"when": "view == main && isMergeConflict == false"
 				}
 			]
 		}

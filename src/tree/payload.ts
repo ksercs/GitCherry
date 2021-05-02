@@ -5,7 +5,7 @@ import Logger from '../info/Logger';
 interface TreePayload {
   title: string,
   description: string,
-  versions: string[],
+  upstreams: string[],
   reviewers: string[],
   labels: string[]
 };
@@ -17,14 +17,14 @@ async function getTreePayload (treeDataProvider: TreeDataProvider): Promise<Tree
   Logger.logInfo(`First commit: ${JSON.stringify(firstCommit)}`);
 
   if (!firstCommit) {
-    Logger.showNoCommitInBranchError(Git.getBranchName());
+    Logger.showNoCommitInBranchError(await Git.getBranchName());
     return;
   }
 
   return {
     title: firstCommit.message,
     description: '',
-    versions: treeDataProvider.getSelectedVersions(),
+    upstreams: treeDataProvider.getSelectedUpstreams(),
     reviewers: treeDataProvider.getSelectedReviewers(),
     labels: treeDataProvider.getSelectedLabels()
   };
