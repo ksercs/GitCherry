@@ -11,8 +11,8 @@ export default class TreeCreator {
     return new ExtendedTreeItem(rootLabel, children, expanded);
   }
 
-  private static async createLabelsTree (labels: string[], branches: string[]): Promise<ExtendedTreeItem> {
-    return this.createTreeItem(LABELS_ROOT_LABEL, this.filterLabels(labels, branches));
+  private static async createLabelsTree (labels: string[]): Promise<ExtendedTreeItem> {
+    return this.createTreeItem(LABELS_ROOT_LABEL, labels);
   }
 
   private static async createReviewersTree (ignoreCache?: boolean): Promise<ExtendedTreeItem> {
@@ -25,19 +25,13 @@ export default class TreeCreator {
     return this.createTreeItem(UPSTREAM_ROOT_LABEL, branches);
   }
 
-  private static filterLabels (labels: Array<any>, branches: Array<any>): Array<any> {
-    return labels.filter(label => {
-      return !(AUTOMATICALLY_ADDED_LABELS.find(l => l === label.name) || branches.find(b => b.name === label.name));
-    });
-  }
-
   static async createTree (ignoreCache?: boolean): Promise<ExtendedTreeItem[]> {
     const branches = await GithubClient.getBranches();
     const labels = await GithubClient.getLabels();
 
     return [new ExtendedTreeItem('Pull request settings', [
       await TreeCreator.createBranchesTree(branches),
-      await TreeCreator.createLabelsTree(labels, branches),
+      await TreeCreator.createLabelsTree(labels),
       await TreeCreator.createReviewersTree(ignoreCache)
     ], true)];
   }

@@ -14,8 +14,6 @@ async function createPullRequest ({ title, description, labels, reviewers }: Tre
   const head = Git.isRemoteUpstream() ? `${login}:${branch}` : branch;
   const pullRequest = await GithubClient.createPullRequest(head, upstreamBranch, title, description);
 
-  labels = await customizeLabels(labels, upstreamBranch, baseUpstreamBranch);
-
   if (pullRequest?.status === 201) {
     const pullRequestNumber = pullRequest.data.number;
 
@@ -24,21 +22,6 @@ async function createPullRequest ({ title, description, labels, reviewers }: Tre
     await GithubClient.addReviewers(pullRequestNumber, reviewers);
     Logger.logInfo('PR is customized');
   }
-};
-
-async function customizeLabels (labels: string[], upstreamBranch: string, baseUpstreamBranch: string): Promise<string[]> {
-  const repoLabels = (await GithubClient.getLabels()).map((label: {name: string}) => label.name);
-  const newLabels: string[] = [...labels];
-
-  if (repoLabels.includes(upstreamBranch)) {
-    newLabels.push(upstreamBranch);
-  }
-  if (upstreamBranch !== baseUpstreamBranch && repoLabels.includes('cherry-pick')) {
-    newLabels.push('cherry-pick');
-  }
-
-  Logger.logInfo(`Final labels: ${newLabels.join(', ')}`);
-  return newLabels;
 };
 
 export {
