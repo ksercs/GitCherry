@@ -19,7 +19,8 @@ const WARNINGS = {
   NotCommitedMergeConflictSolvingWarning: 'Merge conflicts solving is not commited.',
   NotSolvedMergeConflictWarning: 'Please, solve merge conflicts and commit the changes.',
   MergeConflictDetectedWarning: `Merge conflict on branch $ is detected. 
-  Please, solve it, commit and press "Continue cherry-pick" button.`
+  Please, solve it, commit and press "Continue cherry-pick" button.`,
+  SeveralSeparatorsWarning: 'Branch name includes several "__". Branch name: "$", upstream branch name: "$"'
 };
 
 const prepareMessage = (msg: string, args: string[]) => {

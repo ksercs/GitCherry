@@ -13,11 +13,13 @@ export default class Git {
     private static cherryState: {
       upstreams: string[],
       firstCommit: string,
-      lastCommit: string
+      lastCommit: string,
+      isAborted: boolean
     } = {
       upstreams: [],
       firstCommit: '',
-      lastCommit: ''
+      lastCommit: '',
+      isAborted: false
     };
 
     public static async init () {
@@ -56,20 +58,19 @@ export default class Git {
       Logger.showInfo(`Cherry picking to ${currentBranch} is aborted.`);
       await Git.git.raw(['cherry-pick', '--abort']);
       await Git.isMergeConflict(false);
+      Git.cherryState.isAborted = true;
       await Git.cherryPickToNextUpstream();
     }
 
     public static async getFirstCommit () {
       try {
         const currentBranch = await Git.getBranchName();
-        const remoteBranch = `${Git.remote}/${Git.parseBranch(currentBranch)[1]}`;
+        const remoteBranch = `${Git.remote}/${Git.upstreamBranch}`;
         const commits = await Git.git.log({ from: remoteBranch, to: currentBranch });
         return commits.all[commits.all.length - 1];
       } catch (e) {
         if (e.message === 'Incorrect branch name') {
           throw new Error(e.message);
-        } else {
-          Logger.showNoFirstCommitError();
         }
       }
     }
@@ -88,8 +89,13 @@ export default class Git {
         throw new Error('Incorrect branch name');
       }
 
-      const parsedBranchName = branch.match(BRANCH_REGEX) as RegExpMatchArray;
-      return [parsedBranchName[1], parsedBranchName[2]];
+      const matches = branch.match(BRANCH_REGEX) as RegExpMatchArray;
+      const localBranch = matches[1];
+      const upstreamBranch = matches[2];
+      if (branch.split('__').length > 2) {
+        Logger.showSeveralSeparatorsWarning(localBranch, upstreamBranch);
+      }
+      return [localBranch, upstreamBranch];
     };
 
     public static async push () {
@@ -160,9 +166,10 @@ export default class Git {
       const startBranchName = `${Git.localBranch}__${Git.upstreamBranch}`;
       const currentBranch = await Git.getBranchName();
 
-      if (currentBranch !== startBranchName) {
+      if (currentBranch !== startBranchName && !Git.cherryState.isAborted) {
         Logger.showInfo(`Cherry picked successfully to branch "${currentBranch}".`);
       }
+      Git.cherryState.isAborted = false;
 
       if (upstreamsCount === 0) {
         if (currentBranch !== startBranchName) {
@@ -236,7 +243,7 @@ export default class Git {
     private static async getLastCommit () {
       try {
         const currentBranch = await Git.getBranchName();
-        const remoteBranch = `${Git.remote}/${Git.parseBranch(currentBranch)[1]}`;
+        const remoteBranch = `${Git.remote}/${Git.upstreamBranch}`;
         const commits = await Git.git.log({ from: remoteBranch, to: currentBranch });
         return commits.all[0];
       } catch (err) {
