@@ -1,5 +1,4 @@
 import { ExtendedTreeItem, REVIEWERS_ROOT_LABEL, LABELS_ROOT_LABEL, UPSTREAM_ROOT_LABEL } from './item';
-import { getReviewersPayload } from '../reviewers/payload';
 import GithubClient from '../github/client';
 
 const CHERRY_PICK_LABEL = 'cherry-pick';
@@ -11,34 +10,28 @@ export default class TreeCreator {
     return new ExtendedTreeItem(rootLabel, children, expanded);
   }
 
-  private static async createLabelsTree (labels: string[], branches: string[]): Promise<ExtendedTreeItem> {
-    return this.createTreeItem(LABELS_ROOT_LABEL, this.filterLabels(labels, branches));
+  private static async createLabelsTree (labels: string[]): Promise<ExtendedTreeItem> {
+    return this.createTreeItem(LABELS_ROOT_LABEL, labels);
   }
 
-  private static async createReviewersTree (ignoreCache?: boolean): Promise<ExtendedTreeItem> {
-    const reviewerPayload = await getReviewersPayload(ignoreCache);
-
-    return this.createTreeItem(REVIEWERS_ROOT_LABEL, reviewerPayload, 'name', true);
+  private static async createReviewersTree (reviewers: string[]): Promise<ExtendedTreeItem> {
+    return this.createTreeItem(REVIEWERS_ROOT_LABEL, reviewers, 'login');
   }
 
   private static async createBranchesTree (branches: string[]): Promise<ExtendedTreeItem> {
     return this.createTreeItem(UPSTREAM_ROOT_LABEL, branches);
   }
 
-  private static filterLabels (labels: Array<any>, branches: Array<any>): Array<any> {
-    return labels.filter(label => {
-      return !(AUTOMATICALLY_ADDED_LABELS.find(l => l === label.name) || branches.find(b => b.name === label.name));
-    });
-  }
-
   static async createTree (ignoreCache?: boolean): Promise<ExtendedTreeItem[]> {
     const branches = await GithubClient.getBranches();
     const labels = await GithubClient.getLabels();
+    const { login } = await GithubClient.getUser();
+    const reviewers = (await GithubClient.getReviewers()).filter((reviewer: { login: string }) => reviewer.login !== login);
 
     return [new ExtendedTreeItem('Pull request settings', [
       await TreeCreator.createBranchesTree(branches),
-      await TreeCreator.createLabelsTree(labels, branches),
-      await TreeCreator.createReviewersTree(ignoreCache)
+      await TreeCreator.createLabelsTree(labels),
+      await TreeCreator.createReviewersTree(reviewers)
     ], true)];
   }
 }

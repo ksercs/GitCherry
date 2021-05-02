@@ -1,15 +1,13 @@
 import { commands, ExtensionContext, window } from 'vscode';
 import TreeDataProvider from './tree/dataProvider';
 import { Action } from './actions';
-import Storage from './storage';
 import GithubClient from './github/client';
 import Git from './git/client';
 
-export async function activate (context: ExtensionContext) {
+export async function activate () {
   const treeDataProvider = new TreeDataProvider();
   await Git.init();
   await GithubClient.init();
-  Storage.setStorage(context.globalState);
 
   window.registerTreeDataProvider('main', treeDataProvider);
   commands.registerCommand('pull_request', () => Action.onPullRequest(treeDataProvider));
