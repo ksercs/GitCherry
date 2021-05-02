@@ -47,7 +47,15 @@ export default class GithubClient {
     }
 
     static async getReviewers (): Promise<ReviewersDataType> {
-      return getData(await GithubClient.octokit.repos.listCollaborators(GithubClient.repoData)) as ReviewersDataType;
+      const getDataFromPage = async (page: number) => {
+        return getData(await GithubClient.octokit.repos.listCollaborators(Object.assign({}, GithubClient.repoData, { per_page: 100, page }))) || [];
+      };
+      const reviewers = [];
+      for (let i = 1; i <= 5; ++i) {
+        reviewers.push(...(await getDataFromPage(i)));
+      }
+      Logger.logInfo(reviewers.length);
+      return reviewers as ReviewersDataType;
     }
 
     static async getBranches (): Promise<BranchesDataType> {
