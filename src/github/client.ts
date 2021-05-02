@@ -40,7 +40,6 @@ export default class GithubClient {
       GithubClient.repoData = Git.getRepoData();
 
       Logger.showInfo(`You are logged in GitHub as ${session.account.label}`);
-      Logger.logInfo(`Github login: ${session.account.label}`);
     }
 
     static async getLabels (): Promise<LabelsDataType> {
@@ -93,7 +92,6 @@ export default class GithubClient {
 
         return response;
       } catch (e) {
-        Logger.logWarning(e.errors[0].message);
         Logger.showWarning(e.errors[0].message);
       }
     }

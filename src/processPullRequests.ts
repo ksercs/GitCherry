@@ -22,7 +22,7 @@ async function pushAndCreatePullRequests (payload: TreePayload) {
     } catch (e) {
       Logger.logError(e);
       if (e.message.includes('did not match any file')) {
-        Logger.showError(`Branch "${localBranch}__${upstreamBranch}" does not exist. Did you forget to cherry-pick?`);
+        Logger.showNoLocalBranchError(`${localBranch}__${upstreamBranch}`);
       }
     }
   };

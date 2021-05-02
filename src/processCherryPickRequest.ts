@@ -14,8 +14,7 @@ async function processCherryPickRequest (payload: TreePayload) {
   Logger.logInfo(`branch: ${branch}, localBranch: ${localBranch}, baseUpstreamBranch: ${baseUpstreamBranch}, upstreams: ${upstreams}`);
 
   if (upstreams.length === 0) {
-    Logger.logWarning('no branches to cherry pick');
-    Logger.showWarning(`No upstream branch selected to cherry pick. Current branch is "${branch}"`);
+    Logger.showNoUpstreamBranchToCherryPickWarning(branch);
   } else {
     await Git.startCherryPicking(upstreams);
   }
