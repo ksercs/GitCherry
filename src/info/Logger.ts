@@ -74,12 +74,21 @@ const Logger: any = {
   }
 };
 
-Object.entries(Object.assign({}, ERRORS, WARNINGS)).forEach(([name, templateMessage]) => {
+Object.entries(ERRORS).forEach(([name, templateMessage]) => {
   Logger[`show${name}`] = (...args: string[]) => {
     const msg: string = prepareMessage(templateMessage, args);
 
     Logger.logError(msg);
     Logger.showError(msg);
+  };
+});
+
+Object.entries(ERRORS).forEach(([name, templateMessage]) => {
+  Logger[`show${name}`] = (...args: string[]) => {
+    const msg: string = prepareMessage(templateMessage, args);
+
+    Logger.logWarning(msg);
+    Logger.showWarning(msg);
   };
 });
 
