@@ -3,9 +3,8 @@ import Git from '../git/client';
 import Logger from '../info/logger';
 import { TreePayload } from '../tree/payload';
 
-async function createPullRequest ({ title, description, labels, reviewers }: TreePayload) {
+async function createPullRequest ({ title, description, labels, reviewers }: TreePayload, upstreamBranch: string) {
   const branch = await Git.getBranchName();
-  const upstreamBranch = Git.parseBranch(branch)[1];
 
   Logger.logInfo(`Start PR creating: ${upstreamBranch}`);
   const { login } = await GithubClient.getUser();
