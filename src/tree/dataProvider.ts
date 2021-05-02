@@ -1,6 +1,6 @@
 import { EventEmitter, Event, commands } from 'vscode';
 import * as vscode from 'vscode';
-import { ExtendedTreeItem, REVIEWERS_ROOT_LABEL, LABELS_ROOT_LABEL, VERSION_ROOT_LABEL } from './item';
+import { ExtendedTreeItem, REVIEWERS_ROOT_LABEL, LABELS_ROOT_LABEL, UPSTREAM_ROOT_LABEL } from './item';
 import TreeCreator from './creator';
 
 export default class TreeDataProvider implements vscode.TreeDataProvider<ExtendedTreeItem> {
@@ -10,8 +10,8 @@ export default class TreeDataProvider implements vscode.TreeDataProvider<Extende
     commands.registerCommand('treeView.selectTreeItem', (element) => this.onItemClicked(element));
   }
 
-  getSelectedVersions (): string[] {
-    return this.getSelectedByRootLabel(VERSION_ROOT_LABEL);
+  getSelectedUpstreams (): string[] {
+    return this.getSelectedByRootLabel(UPSTREAM_ROOT_LABEL);
   }
 
   getSelectedReviewers (): string[] {

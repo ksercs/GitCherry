@@ -1,14 +1,20 @@
 import GithubClient from './client';
+import Git from '../git/client';
 import Logger from '../info/logger';
 import { TreePayload } from '../tree/payload';
 
-async function createPullRequest ({ title, description, labels, reviewers }: TreePayload, login: string, branchWithoutVersion: string, base_version: string, version: string) {
-  Logger.logInfo(`Start PR creating: ${version}`);
+async function createPullRequest ({ title, description, labels, reviewers }: TreePayload, baseUpstreamBranch: string) {
+  const branch = await Git.getBranchName();
+  const [localBranch, upstreamBranch] = Git.parseBranch(branch);
 
-  const head = `${login}:${branchWithoutVersion}_${version}`;
-  const pullRequest = await GithubClient.createPullRequest(head, version, title, description);
+  Logger.logInfo(`Start PR creating: ${upstreamBranch}`);
+  const { login } = await GithubClient.getUser();
+  Logger.logInfo(`login: ${login}`);
 
-  labels = customizeLabels(labels, version, base_version);
+  const head = Git.isRemoteUpstream() ? `${login}:${branch}` : branch;
+  const pullRequest = await GithubClient.createPullRequest(head, upstreamBranch, title, description);
+
+  labels = await customizeLabels(labels, upstreamBranch, baseUpstreamBranch);
 
   if (pullRequest?.status === 201) {
     const pullRequestNumber = pullRequest.data.number;
@@ -20,9 +26,14 @@ async function createPullRequest ({ title, description, labels, reviewers }: Tre
   }
 };
 
-function customizeLabels(labels: string[], version: string, base_version: string): string[] {
-  const new_labels: string[] = [...labels, version];
-  if (version !== base_version) {
+async function customizeLabels(labels: string[], upstreamBranch: string, baseUpstreamBranch: string): Promise<string[]> {
+  const repoLabels = (await GithubClient.getLabels()).map((label: {name: string}) => label.name);
+  const new_labels: string[] = [...labels];
+
+  if (repoLabels.includes(upstreamBranch)) {
+    new_labels.push(upstreamBranch);
+  }
+  if (upstreamBranch !== baseUpstreamBranch && repoLabels.includes('cherry-pick')) {
     new_labels.push('cherry-pick');
   }
 
