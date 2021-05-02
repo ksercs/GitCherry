@@ -1,4 +1,4 @@
-import { commands, ExtensionContext, window } from 'vscode';
+import { commands, window } from 'vscode';
 import TreeDataProvider from './tree/dataProvider';
 import { Action } from './actions';
 import GithubClient from './github/client';

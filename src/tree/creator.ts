@@ -1,9 +1,6 @@
 import { ExtendedTreeItem, REVIEWERS_ROOT_LABEL, LABELS_ROOT_LABEL, UPSTREAM_ROOT_LABEL } from './item';
 import GithubClient from '../github/client';
 
-const CHERRY_PICK_LABEL = 'cherry-pick';
-const AUTOMATICALLY_ADDED_LABELS = [CHERRY_PICK_LABEL];
-
 export default class TreeCreator {
   private static createTreeItem (rootLabel: string, data: any[], nameKey: string = 'name', expanded: boolean = true): ExtendedTreeItem {
     const children = data ? [...data.map(item => TreeCreator.createTreeItem(item[nameKey], item.children, nameKey, item.expanded ?? expanded))] : undefined;
@@ -22,7 +19,7 @@ export default class TreeCreator {
     return this.createTreeItem(UPSTREAM_ROOT_LABEL, branches);
   }
 
-  static async createTree (ignoreCache?: boolean): Promise<ExtendedTreeItem[]> {
+  static async createTree (): Promise<ExtendedTreeItem[]> {
     const branches = await GithubClient.getBranches();
     const labels = await GithubClient.getLabels();
     const { login } = await GithubClient.getUser();

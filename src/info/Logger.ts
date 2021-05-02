@@ -83,7 +83,7 @@ Object.entries(ERRORS).forEach(([name, templateMessage]) => {
   };
 });
 
-Object.entries(ERRORS).forEach(([name, templateMessage]) => {
+Object.entries(WARNINGS).forEach(([name, templateMessage]) => {
   Logger[`show${name}`] = (...args: string[]) => {
     const msg: string = prepareMessage(templateMessage, args);
 

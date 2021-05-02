@@ -22,7 +22,7 @@ export class Action {
       if (titleInput.step === 1) {
         Logger.logInfo(`Accepted title: ${titleInput.value}`);
         payload.title = titleInput.value;
-        this.createDescriptionInput(titleInput, payload);
+        this.createDescriptionInput(titleInput);
       } else {
         Logger.logInfo(`Accepted description: ${titleInput.value}`);
         payload.description = titleInput.value;
@@ -35,7 +35,7 @@ export class Action {
     Logger.logInfo('Title input is shown');
   }
 
-  private static async createDescriptionInput (input: InputBox, payload: TreePayload) {
+  private static async createDescriptionInput (input: InputBox) {
     Logger.logInfo('Description input is created');
     input.value = '';
     input.step = 2;
@@ -55,7 +55,7 @@ export class Action {
 
   static async onRefresh (treeDataProvider: TreeDataProvider) {
     Logger.logInfo('Start refreshing');
-    treeDataProvider.tree = await TreeCreator.createTree(true);
+    treeDataProvider.tree = await TreeCreator.createTree();
     Logger.logInfo('Tree is created');
     treeDataProvider.refresh();
     Logger.logInfo('Tree is refreshed');
