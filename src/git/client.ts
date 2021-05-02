@@ -53,7 +53,6 @@ export default class Git {
 
     public static async abortCherryPicking () {
       const currentBranch = await Git.getBranchName();
-      Logger.logInfo(`abort cherry-picking on branch ${currentBranch}`);
       Logger.showInfo(`Cherry picking to ${currentBranch} is aborted.`);
       await Git.git.raw(['cherry-pick', '--abort']);
       await Git.isMergeConflict(false);
@@ -95,7 +94,6 @@ export default class Git {
 
     public static async push () {
       const currentBranch = await Git.getBranchName();
-      Logger.logInfo(`git push ${currentBranch}`);
       Logger.showInfo(`Commits are pushed to the branch ${currentBranch}`);
       await Git.git.push('origin', currentBranch);
     }
@@ -122,11 +120,11 @@ export default class Git {
         const isConflictNotSolved = message.includes('unmerged files') || message.includes('not staged');
         const isNoCherryPickInProgress = message.includes('no cherry-pick');
         if (isMergeConflictSolveNotCommited) {
-          Logger.showWarning('Merge conflicts solving is not commited.');
+          Logger.showNotCommitedMergeConflictSolvingWarning();
           return;
         }
         if (isConflictNotSolved) {
-          Logger.showWarning('Please, solve merge conflicts and commit the changes.');
+          Logger.showNotSolvedMergeConflictWarning();
           return;
         }
         if (!isNoCherryPickInProgress) {
@@ -150,8 +148,7 @@ export default class Git {
       if (isMergeConflict) {
         Logger.logInfo('merge conflict is detected');
         Logger.logInfo('show continue button');
-        Logger.showWarning(`Merge conflict on branch ${await Git.getBranchName()} is detected. 
-        Please, solve it, commit and press "Continue cherry-pick" button.`);
+        Logger.showMergeConflictDetectedWarning(await Git.getBranchName());
       } else {
         Logger.logInfo('hide continue button');
       }
@@ -164,7 +161,6 @@ export default class Git {
       const currentBranch = await Git.getBranchName();
 
       if (currentBranch !== startBranchName) {
-        Logger.logInfo(`Commits are cherry picked to branch "${currentBranch}"`);
         Logger.showInfo(`Cherry picked successfully to branch "${currentBranch}".`);
       }
 
@@ -183,8 +179,7 @@ export default class Git {
         await Git.branchOut(Git.localBranch, upstreamBranch);
         await Git.cherryPick(Git.cherryState.firstCommit, Git.cherryState.lastCommit);
       } catch (e) {
-        Logger.showError(e);
-        Logger.logError(e);
+        Logger.showError(e)
       }
     }
 

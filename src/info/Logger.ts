@@ -10,7 +10,16 @@ const ERRORS = {
   OwnerSquadNotFoundError: 'Owner squad is not found.',
   NoFirstCommitError: 'No first commit found. Check that a git repository is opened.',
   IncorrectBranchNameError: '"$" is not correct branch name. Name your branch as *branch__upstream*',
-  NoCommitInBranchError: 'There is no new commits in "$" branch'
+  NoCommitInBranchError: 'There is no new commits in "$" branch',
+  NoLocalBranchError: 'Branch "$"does not exist. Did you forget to cherry-pick?'
+};
+
+const WARNINGS = {
+  NoUpstreamBranchToCherryPickWarning: 'No upstream branch selected to cherry pick. Current branch is "$".',
+  NotCommitedMergeConflictSolvingWarning: 'Merge conflicts solving is not commited.',
+  NotSolvedMergeConflictWarning: 'Please, solve merge conflicts and commit the changes.',
+  MergeConflictDetectedWarning: `Merge conflict on branch $ is detected. 
+  Please, solve it, commit and press "Continue cherry-pick" button.`
 };
 
 const prepareMessage = (msg: string, args: string[]) => {
@@ -32,14 +41,17 @@ const prepareMessage = (msg: string, args: string[]) => {
 
 const Logger: any = {
   showError: (msg: string) => {
+    Logger.logError(msg);
     window.showErrorMessage(msg);
   },
 
   showInfo: (msg: string) => {
+    Logger.logInfo(msg);
     window.showInformationMessage(msg);
   },
 
   showWarning: (msg: string) => {
+    Logger.logWarning(msg);
     window.showWarningMessage(msg);
   },
 
@@ -62,7 +74,7 @@ const Logger: any = {
   }
 };
 
-Object.entries(ERRORS).forEach(([name, templateMessage]) => {
+Object.entries(Object.assign({}, ERRORS, WARNINGS)).forEach(([name, templateMessage]) => {
   Logger[`show${name}`] = (...args: string[]) => {
     const msg: string = prepareMessage(templateMessage, args);
 
