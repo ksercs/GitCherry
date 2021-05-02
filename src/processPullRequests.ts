@@ -18,7 +18,7 @@ async function pushAndCreatePullRequests (payload: TreePayload) {
     try {
       await Git.checkOut(localBranch, upstreamBranch);
       await Git.push();
-      await createPullRequest(payload, baseUpstreamBranch);
+      await createPullRequest(payload);
     } catch (e) {
       Logger.logError(e);
       if (e.message.includes('did not match any file')) {

@@ -3,7 +3,7 @@ import Git from '../git/client';
 import Logger from '../info/logger';
 import { TreePayload } from '../tree/payload';
 
-async function createPullRequest ({ title, description, labels, reviewers }: TreePayload, baseUpstreamBranch: string) {
+async function createPullRequest ({ title, description, labels, reviewers }: TreePayload) {
   const branch = await Git.getBranchName();
   const upstreamBranch = Git.parseBranch(branch)[1];
 

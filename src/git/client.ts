@@ -179,7 +179,7 @@ export default class Git {
         await Git.branchOut(Git.localBranch, upstreamBranch);
         await Git.cherryPick(Git.cherryState.firstCommit, Git.cherryState.lastCommit);
       } catch (e) {
-        Logger.showError(e)
+        Logger.showError(e);
       }
     }
 
