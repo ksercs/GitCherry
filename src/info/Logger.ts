@@ -1,4 +1,4 @@
-import { window, env, Uri, MessageItem } from 'vscode';
+import { window, env, Uri } from 'vscode';
 import log from './log';
 
 const ERRORS = {

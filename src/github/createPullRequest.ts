@@ -5,7 +5,7 @@ import { TreePayload } from '../tree/payload';
 
 async function createPullRequest ({ title, description, labels, reviewers }: TreePayload, baseUpstreamBranch: string) {
   const branch = await Git.getBranchName();
-  const [localBranch, upstreamBranch] = Git.parseBranch(branch);
+  const upstreamBranch = Git.parseBranch(branch)[1];
 
   Logger.logInfo(`Start PR creating: ${upstreamBranch}`);
   const { login } = await GithubClient.getUser();
@@ -26,19 +26,19 @@ async function createPullRequest ({ title, description, labels, reviewers }: Tre
   }
 };
 
-async function customizeLabels(labels: string[], upstreamBranch: string, baseUpstreamBranch: string): Promise<string[]> {
+async function customizeLabels (labels: string[], upstreamBranch: string, baseUpstreamBranch: string): Promise<string[]> {
   const repoLabels = (await GithubClient.getLabels()).map((label: {name: string}) => label.name);
-  const new_labels: string[] = [...labels];
+  const newLabels: string[] = [...labels];
 
   if (repoLabels.includes(upstreamBranch)) {
-    new_labels.push(upstreamBranch);
+    newLabels.push(upstreamBranch);
   }
   if (upstreamBranch !== baseUpstreamBranch && repoLabels.includes('cherry-pick')) {
-    new_labels.push('cherry-pick');
+    newLabels.push('cherry-pick');
   }
 
-  Logger.logInfo(`Final labels: ${new_labels.join(', ')}`);
-  return new_labels;
+  Logger.logInfo(`Final labels: ${newLabels.join(', ')}`);
+  return newLabels;
 };
 
 export {

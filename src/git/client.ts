@@ -10,7 +10,7 @@ export default class Git {
     private static remote: string;
     private static localBranch: string;
     private static upstreamBranch: string;
-    private static cherryState: { 
+    private static cherryState: {
       upstreams: string[],
       firstCommit: string,
       lastCommit: string
@@ -32,26 +32,26 @@ export default class Git {
       await Git.updateRepoData();
     }
 
-    public static isRemoteUpstream() {
+    public static isRemoteUpstream () {
       return Git.remote === 'upstream';
     }
 
-    public static setBranches(localBranch: string, upstreamBranch: string) {
+    public static setBranches (localBranch: string, upstreamBranch: string) {
       Git.localBranch = localBranch;
       Git.upstreamBranch = upstreamBranch;
     }
 
-    public static async startCherryPicking(upstreams: string[]) {
+    public static async startCherryPicking (upstreams: string[]) {
       Git.cherryState.upstreams = upstreams;
       const [firstCommitHash, lastCommitHash] = await Git.pickCommitsHash();
       Git.cherryState.firstCommit = firstCommitHash;
       Git.cherryState.lastCommit = lastCommitHash;
       Logger.logInfo(`cherryState set: ${JSON.stringify(Git.cherryState)}`);
-      
+
       await Git.cherryPickToNextUpstream();
     }
 
-    public static async abortCherryPicking() {
+    public static async abortCherryPicking () {
       const currentBranch = await Git.getBranchName();
       Logger.logInfo(`abort cherry-picking on branch ${currentBranch}`);
       Logger.showInfo(`Cherry picking to ${currentBranch} is aborted.`);
@@ -63,11 +63,11 @@ export default class Git {
     public static async getFirstCommit () {
       try {
         const currentBranch = await Git.getBranchName();
-        const remoteBranch = `${Git.remote}/${Git.parseBranch(currentBranch)[1]}`; 
-        const commits = await Git.git.log({ from: remoteBranch, to: currentBranch});
+        const remoteBranch = `${Git.remote}/${Git.parseBranch(currentBranch)[1]}`;
+        const commits = await Git.git.log({ from: remoteBranch, to: currentBranch });
         return commits.all[commits.all.length - 1];
       } catch (e) {
-        if (e.message = 'Incorrect branch name') {
+        if (e.message === 'Incorrect branch name') {
           throw new Error(e.message);
         } else {
           Logger.showNoFirstCommitError();
@@ -83,12 +83,12 @@ export default class Git {
       return (await Git.git.branch()).current;
     }
 
-    public static parseBranch(branch: string): [string, string] {    
+    public static parseBranch (branch: string): [string, string] {
       if (!BRANCH_REGEX.test(branch)) {
         Logger.showIncorrectBranchNameError(branch);
         throw new Error('Incorrect branch name');
       }
-    
+
       const parsedBranchName = branch.match(BRANCH_REGEX) as RegExpMatchArray;
       return [parsedBranchName[1], parsedBranchName[2]];
     };
@@ -98,16 +98,16 @@ export default class Git {
       Logger.logInfo(`git push ${currentBranch}`);
       Logger.showInfo(`Commits are pushed to the branch ${currentBranch}`);
       await Git.git.push('origin', currentBranch);
-    } 
+    }
 
     public static async checkOut (localBranch: string, upstreamBranch: string) {
-      const toBranch = `${localBranch}__${upstreamBranch}`
+      const toBranch = `${localBranch}__${upstreamBranch}`;
       Logger.logInfo(`git checkout ${toBranch}`);
       await Git.git.checkout(`${toBranch}`);
       Logger.logInfo(`now at branch: ${await Git.getBranchName()}`);
     }
 
-    public static async continueCherryPick() {
+    public static async continueCherryPick () {
       Logger.logInfo('continue cherry-pick');
       try {
         Logger.logInfo('git cherry-pick --continue');
@@ -139,14 +139,14 @@ export default class Git {
       }
     }
 
-    public static async checkoutBack() {
+    public static async checkoutBack () {
       Logger.logInfo(`checkout back to ${Git.localBranch}__${Git.upstreamBranch}`);
       await Git.checkOut(Git.localBranch, Git.upstreamBranch);
     }
 
     // private
 
-    private static async isMergeConflict(isMergeConflict: boolean) {
+    private static async isMergeConflict (isMergeConflict: boolean) {
       if (isMergeConflict) {
         Logger.logInfo('merge conflict is detected');
         Logger.logInfo('show continue button');
@@ -158,9 +158,9 @@ export default class Git {
       commands.executeCommand('setContext', 'isMergeConflict', isMergeConflict);
     }
 
-    private static async cherryPickToNextUpstream() {
+    private static async cherryPickToNextUpstream () {
       const upstreamsCount = Git.cherryState.upstreams.length;
-      const startBranchName = `${Git.localBranch}__${Git.upstreamBranch}`; 
+      const startBranchName = `${Git.localBranch}__${Git.upstreamBranch}`;
       const currentBranch = await Git.getBranchName();
 
       if (currentBranch !== startBranchName) {
@@ -176,20 +176,19 @@ export default class Git {
       }
 
       const upstreamBranch = Git.cherryState.upstreams[upstreamsCount - 1];
-      Git.cherryState.upstreams.length= upstreamsCount - 1;
+      Git.cherryState.upstreams.length = upstreamsCount - 1;
 
       Logger.logInfo(`start cherry-picking to ${upstreamBranch}`);
       try {
         await Git.branchOut(Git.localBranch, upstreamBranch);
         await Git.cherryPick(Git.cherryState.firstCommit, Git.cherryState.lastCommit);
-      } catch(e) {
+      } catch (e) {
         Logger.showError(e);
         Logger.logError(e);
       }
-
     }
 
-    private static async pickCommitsHash(): Promise<[string, string]> {
+    private static async pickCommitsHash (): Promise<[string, string]> {
       const firstCommit = await Git.getFirstCommit();
       const lastCommit = await Git.getLastCommit();
       Logger.logInfo(`commits are picked: firstCommit=${firstCommit}, lastCommit=${lastCommit}`);
@@ -242,8 +241,8 @@ export default class Git {
     private static async getLastCommit () {
       try {
         const currentBranch = await Git.getBranchName();
-        const remoteBranch = `${Git.remote}/${Git.parseBranch(currentBranch)[1]}`; 
-        const commits = await Git.git.log({ from: remoteBranch, to: currentBranch});
+        const remoteBranch = `${Git.remote}/${Git.parseBranch(currentBranch)[1]}`;
+        const commits = await Git.git.log({ from: remoteBranch, to: currentBranch });
         return commits.all[0];
       } catch (err) {
         Logger.logError('no last commit');
@@ -256,7 +255,7 @@ export default class Git {
     }
 
     private static async branchOut (localBranch: string, upstreamBranch: string) {
-      const toBranch = `${localBranch}__${upstreamBranch}`
+      const toBranch = `${localBranch}__${upstreamBranch}`;
       try {
         await Git.git.checkout(toBranch);
         Logger.logInfo(`git checkout ${toBranch}`);
@@ -284,13 +283,13 @@ export default class Git {
           await Git.git.raw(['cherry-pick', `${firstCommit}^..${lastCommit}`]);
         }
         Git.cherryPickToNextUpstream();
-      } catch(e) {
+      } catch (e) {
         Logger.logError(e);
         await Git.solveCherryPickProblem(!e.message.includes('CONFLICT'));
       }
     }
 
-    private static async solveCherryPickProblem(shouldSkip: boolean) {
+    private static async solveCherryPickProblem (shouldSkip: boolean) {
       if (shouldSkip) {
         Logger.logInfo('skip commit');
         try {

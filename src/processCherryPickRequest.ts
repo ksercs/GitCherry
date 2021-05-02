@@ -19,7 +19,6 @@ async function processCherryPickRequest (payload: TreePayload) {
   } else {
     await Git.startCherryPicking(upstreams);
   }
-
 };
 
 export {
