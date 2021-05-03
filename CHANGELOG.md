@@ -20,5 +20,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - dark theme support
 - possibility to use origin instead of upstream
 
-## [NEXT RELEASE]
+## [v1.0.0-eap.1] (03.05.2021)
 
+### bug fixed
+
+- regression: [Reviewers are not added to pull request anymore](https://github.com/ksercs/GitCherry/issues/27)
+
+## [NEXT RELEASE]
