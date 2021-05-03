@@ -15,10 +15,7 @@ export default class TreeDataProvider implements vscode.TreeDataProvider<Extende
   }
 
   getSelectedReviewers (): string[] {
-    return this.getSelectedByRootLabel(REVIEWERS_ROOT_LABEL).map(name => {
-      // TODO: get rid of it
-      return name?.match('\\((.*)$')?.[1].slice(0, -1);
-    }).filter(item => item !== undefined) as string[];
+    return this.getSelectedByRootLabel(REVIEWERS_ROOT_LABEL);
   }
 
   getSelectedLabels (): string[] {
