@@ -30,6 +30,7 @@
 		"email": "ksercs0@gmail.com"
 	},
 	"homepage": "https://github.com/ksercs/GitCherry/blob/master/README.md",
+	"keywords": ["git", "cherry", "pull request", "cherry-pick", "pull-request"],
 	"preview": true,
 	"engines": {
 		"vscode": "^1.50.0"
