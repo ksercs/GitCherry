@@ -69,3 +69,8 @@ Click on `Abort cherry-pick` button when merge conflict is detected to cancel cu
 Extension data tree can become outdated if some new labels, branches or reviewers were added to upstream repo.
 
 Click on `Refresh` button to load new data and update the tree.
+
+
+## Details and future plans
+
+See [CHANGELOG](./CHANGELOG.md)
