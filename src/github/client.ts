@@ -54,7 +54,6 @@ export default class GithubClient {
       for (let i = 1; i <= 5; ++i) {
         reviewers.push(...(await getDataFromPage(i)));
       }
-      Logger.logInfo(reviewers.length);
       return reviewers as ReviewersDataType;
     }
 
