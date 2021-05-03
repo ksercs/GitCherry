@@ -2,11 +2,11 @@
 	"name": "gitcherry",
 	"displayName": "GitCherry",
 	"description": "One-click cherry-picking and pull request creating right in Visual Studio Code",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"publisher": "ksercs",
 	"icon": "resources/icon.png",
 	"galleryBanner": {
-	  "color": "#F550ED"
+	  "color": "#BB09B2"
 	},
 	"author": {
 		"name" : "Anton Kuznetsov",
