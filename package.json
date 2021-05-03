@@ -1,9 +1,36 @@
 {
-	"name": "dxcherry",
-	"displayName": "dxCherry",
-	"description": "",
+	"name": "gitcherry",
+	"displayName": "GitCherry",
+	"description": "One-click cherry-picking and pull request creating right in Visual Studio Code",
 	"version": "0.0.8",
-	"publisher": "dxGitAuto",
+	"publisher": "ksercs&jtoming830",
+	"icon": "resources/icon.png",
+	"galleryBanner": {
+	  "color": "#F550ED"
+	},
+	"author": {
+		"name" : "Anton Kuznetsov",
+		"email" : "ksercs0@gmail.com",
+		"url" : "http://github.com/ksercs"
+	},
+	"contributors": [{
+		"name" : "Anton Kuznetsov",
+		"email" : "ksercs0@gmail.com",
+		"url" : "http://github.com/ksercs"
+	}, {
+		"name" : "Jaan Toming",
+		"url" : "http://github.com/jtoming830"
+	}],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ksercs/GitCherry.git"
+	},
+	"bugs": {
+		"url": "https://github.com/ksercs/GitCherry/issues",
+		"email": "ksercs0@gmail.com"
+	},
+	"homepage": "https://github.com/ksercs/GitCherry/blob/master/README.md",
+	"preview": true,
 	"engines": {
 		"vscode": "^1.50.0"
 	},
@@ -18,14 +45,14 @@
 		"viewsContainers": {
 			"activitybar": [
 				{
-					"id": "dxCherry",
-					"title": "dxCherry",
+					"id": "GitCherry",
+					"title": "GitCherry",
 					"icon": "resources/dark/cherry.svg"
 				}
 			]
 		},
 		"views": {
-			"dxCherry": [
+			"GitCherry": [
 				{
 					"id": "main",
 					"name": "main",
