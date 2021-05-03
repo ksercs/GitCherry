@@ -4,14 +4,14 @@
 
 ## Main features:
 
-1. One-click [cherry-pick to multiple branches](##cherry-pick-to-multiple-branches)
-2. One-click [multiple pull requests with custom configuration creating](##multiple-pull-requests-creating)
+1. One-click [cherry-pick to multiple branches](#cherry-pick-to-multiple-branches)
+2. One-click [multiple pull requests with custom configuration creating](#multiple-pull-requests-creating)
 
 ### some more:
 
-- [merge conflicts solving](###merge-conflicts-solving)
-- [abort cherry-pick when merge conflict is detected](###abort-cherry-pick-when-merge-conflict-is-detected)
-- [data tree refreshing](###views-refreshing0)
+- [merge conflicts solving](#merge-conflicts-solving)
+- [abort cherry-pick when merge conflict is detected](#abort-cherry-pick-when-merge-conflict-is-detected)
+- [data tree refreshing](#data-tree-refreshing)
 
 
 ## Cherry-pick to multiple branches
