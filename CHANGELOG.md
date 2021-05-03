@@ -9,14 +9,14 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### features
 - integration with github; branches, labels, reviewers receiving
 - [cherry-pick to multiple branches](./README.md#cherry-pick-to-multiple-branches)
-- [multiple pull requests creating](./README.md#cherry-pick-to-multiple-branches)
+- [multiple pull requests creating](./README.md##multiple-pull-requests-creating)
 - pull request customization: title and description
 - cherry-picking to already checked out branch
 - empty commits skip during cherry-picking
 - info, errors, warnings showing and logging
-- [merge conflicts solving](./README.md#cherry-pick-to-multiple-branches)
-- [abort cherry-picking when merge conflict is detected](./README.md#cherry-pick-to-multiple-branches)
-- [data tree refresh](./README.md#cherry-pick-to-multiple-branches)
+- [merge conflicts solving](./README.md#merge-conflicts-solving)
+- [abort cherry-picking when merge conflict is detected](./README.md#abort-cherry-pick-when-merge-conflict-is-detected)
+- [data tree refresh](./README.md#data-tree-refreshing)
 - dark theme support
 - possibility to use origin instead of upstream
 
