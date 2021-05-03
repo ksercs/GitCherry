@@ -70,7 +70,13 @@ export class Action {
   }
 
   static async onCherryPick (treeDataProvider: TreeDataProvider) {
-    const payload = await getTreePayload(treeDataProvider);
+    const branch = await Git.getBranchName();
+    const [localBranch, baseUpstreamBranch] = Git.parseBranch(branch);
+    Git.setBranches(localBranch, baseUpstreamBranch);
+
+    const payload = await getTreePayload(treeDataProvider) as TreePayload;
+    payload.upstreams = payload.upstreams.filter((upstream) => upstream !== baseUpstreamBranch);
+    Logger.logInfo(`branch: ${branch}, localBranch: ${localBranch}, baseUpstreamBranch: ${baseUpstreamBranch}, upstreams: ${payload.upstreams}`);
     await processCherryPickRequest(payload as TreePayload);
   }
 }
