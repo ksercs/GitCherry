@@ -267,12 +267,18 @@ export default class Git {
         Logger.logInfo(`no local branch ${toBranch}`);
       }
 
-      await Git.fetch(upstreamBranch);
-      Logger.logInfo(`git checkout ${Git.remote}/${upstreamBranch}`);
-      await Git.git.checkout(`${Git.remote}/${upstreamBranch}`);
-      Logger.logInfo(`git checkout -b ${toBranch}`);
-      await Git.git.checkout(['-b', `${toBranch}`]);
-      Logger.logInfo(`now at branch: ${await Git.getBranchName()}`);
+      try {
+        await Git.fetch(upstreamBranch);
+        Logger.logInfo(`git checkout ${Git.remote}/${upstreamBranch}`);
+        await Git.git.checkout(`${Git.remote}/${upstreamBranch}`);
+        Logger.logInfo(`git checkout -b ${toBranch}`);
+        await Git.git.checkout(['-b', `${toBranch}`]);
+        Logger.logInfo(`now at branch: ${await Git.getBranchName()}`);
+      } catch (e) {
+        // TODO: move error to Logger
+        Logger.showError(e.message);
+        throw e;
+      }
     }
 
     private static async cherryPick (firstCommit: string, lastCommit: string) {
