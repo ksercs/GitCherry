@@ -7,9 +7,25 @@ import { processCherryPickRequest } from './processCherryPickRequest';
 import { pushAndCreatePullRequests } from './processPullRequests';
 import Git from './git/client';
 
+async function preparePayload (
+  treeDataProvider: TreeDataProvider,
+  options: { skipBaseUpstream: boolean } = { skipBaseUpstream: false }
+): Promise<TreePayload> {
+  const branch = await Git.getBranchName();
+  const [localBranch, baseUpstreamBranch] = Git.parseBranch(branch);
+  Git.setBranches(localBranch, baseUpstreamBranch);
+
+  const payload = await getTreePayload(treeDataProvider) as TreePayload;
+  if (options.skipBaseUpstream) {
+    payload.upstreams = payload.upstreams.filter((upstream) => upstream !== baseUpstreamBranch);
+  }
+  Logger.logInfo(`branch: ${branch}, localBranch: ${localBranch}, baseUpstreamBranch: ${baseUpstreamBranch}, upstreams: ${payload.upstreams}`);
+
+  return payload;
+}
 export class Action {
   static async onPullRequest (treeDataProvider: TreeDataProvider) {
-    const payload = await getTreePayload(treeDataProvider);
+    const payload = await preparePayload(treeDataProvider);
 
     if (!payload) {
       Logger.logError('no payload');
@@ -70,13 +86,7 @@ export class Action {
   }
 
   static async onCherryPick (treeDataProvider: TreeDataProvider) {
-    const branch = await Git.getBranchName();
-    const [localBranch, baseUpstreamBranch] = Git.parseBranch(branch);
-    Git.setBranches(localBranch, baseUpstreamBranch);
-
-    const payload = await getTreePayload(treeDataProvider) as TreePayload;
-    payload.upstreams = payload.upstreams.filter((upstream) => upstream !== baseUpstreamBranch);
-    Logger.logInfo(`branch: ${branch}, localBranch: ${localBranch}, baseUpstreamBranch: ${baseUpstreamBranch}, upstreams: ${payload.upstreams}`);
+    const payload = await preparePayload(treeDataProvider, { skipBaseUpstream: true });
     await processCherryPickRequest(payload as TreePayload);
   }
 }
