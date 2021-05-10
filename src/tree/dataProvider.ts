@@ -7,7 +7,7 @@ export default class TreeDataProvider implements vscode.TreeDataProvider<Extende
   tree!: ExtendedTreeItem[];
 
   constructor () {
-    commands.registerCommand('treeView.selectTreeItem', (element) => this.onItemClicked(element));
+    commands.registerCommand('GitCherry.treeView.selectTreeItem', (element) => this.onItemClicked(element));
   }
 
   getSelectedUpstreams (): string[] {
@@ -34,7 +34,7 @@ export default class TreeDataProvider implements vscode.TreeDataProvider<Extende
   // eslint-disable-next-line no-undef
   getTreeItem (element: ExtendedTreeItem): ExtendedTreeItem|Thenable<ExtendedTreeItem> {
     element.setIcon();
-    element.command = { command: 'treeView.selectTreeItem', title: 'Select item', arguments: [element] };
+    element.command = { command: 'GitCherry.treeView.selectTreeItem', title: 'Select item', arguments: [element] };
     return element;
   }
 

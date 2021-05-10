@@ -39,7 +39,7 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onView:main"
+		"onView:GitCherry.main"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -55,7 +55,7 @@
 		"views": {
 			"GitCherry": [
 				{
-					"id": "main",
+					"id": "GitCherry.main",
 					"name": "main",
 					"icon": "resources/dark/cherry.svg"
 				}
@@ -63,7 +63,7 @@
 		},
 		"commands": [
 			{
-				"command": "pull_request",
+				"command": "GitCherry.pull_request",
 				"title": "Create pull requests",
 				"icon": {
 					"light": "resources/light/start.svg",
@@ -71,7 +71,7 @@
 				}
 			},
 			{
-				"command": "refresh",
+				"command": "GitCherry.refresh",
 				"title": "Refresh",
 				"icon": {
 					"light": "resources/light/refresh.svg",
@@ -79,7 +79,7 @@
 				}
 			},
 			{
-				"command": "continue",
+				"command": "GitCherry.continue",
 				"title": "Continue cherry-picking",
 				"icon": {
 					"light": "resources/light/continue.svg",
@@ -87,7 +87,7 @@
 				}
 			},
 			{
-				"command": "cherry_pick",
+				"command": "GitCherry.cherry_pick",
 				"title": "Cherry-pick",
 				"icon": {
 					"light": "resources/light/cherry.svg",
@@ -95,7 +95,7 @@
 				}
 			},
 			{
-				"command": "abort_cherry_pick",
+				"command": "GitCherry.abort_cherry_pick",
 				"title": "Abort cherry-picking",
 				"icon": {
 					"light": "resources/light/abort.svg",
@@ -106,29 +106,29 @@
 		"menus": {
 			"view/title": [
 				{
-					"command": "pull_request",
+					"command": "GitCherry.pull_request",
 					"group": "navigation",
-					"when": "view == main"
+					"when": "view == GitCherry.main"
 				},
 				{
-					"command": "refresh",
+					"command": "GitCherry.refresh",
 					"group": "navigation",
-					"when": "view == main"
+					"when": "view == GitCherry.main"
 				},
 				{
-					"command": "continue",
+					"command": "GitCherry.continue",
 					"group": "navigation",
-					"when": "view == main && isMergeConflict == true"
+					"when": "view == GitCherry.main && isMergeConflict == true"
 				},
 				{
-					"command": "abort_cherry_pick",
+					"command": "GitCherry.abort_cherry_pick",
 					"group": "navigation",
-					"when": "view == main && isMergeConflict == true"
+					"when": "view == GitCherry.main && isMergeConflict == true"
 				},
 				{
-					"command": "cherry_pick",
+					"command": "GitCherry.cherry_pick",
 					"group": "navigation",
-					"when": "view == main && isMergeConflict == false"
+					"when": "view == GitCherry.main && isMergeConflict == false"
 				}
 			]
 		}
