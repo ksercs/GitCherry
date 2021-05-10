@@ -9,10 +9,10 @@ export async function activate () {
   await Git.init();
   await GithubClient.init();
 
-  window.registerTreeDataProvider('main', treeDataProvider);
-  commands.registerCommand('pull_request', () => Action.onPullRequest(treeDataProvider));
-  commands.registerCommand('cherry_pick', () => Action.onCherryPick(treeDataProvider));
-  commands.registerCommand('refresh', () => Action.onRefresh(treeDataProvider));
-  commands.registerCommand('continue', () => Action.onContinue());
-  commands.registerCommand('abort_cherry_pick', () => Action.onAbortCherryPick());
+  window.registerTreeDataProvider('GitCherry.main', treeDataProvider);
+  commands.registerCommand('GitCherry.pull_request', () => Action.onPullRequest(treeDataProvider));
+  commands.registerCommand('GitCherry.cherry_pick', () => Action.onCherryPick(treeDataProvider));
+  commands.registerCommand('GitCherry.refresh', () => Action.onRefresh(treeDataProvider));
+  commands.registerCommand('GitCherry.continue', () => Action.onContinue());
+  commands.registerCommand('GitCherry.abort_cherry_pick', () => Action.onAbortCherryPick());
 }
