@@ -33,4 +33,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - standalone pull requests creating is fixed ([issue](https://github.com/ksercs/GitCherry/issues/35))
 - added `NotStagedChangesFound` error showing when extension tries to check out branch with not staged changes
 
+## [v1.1.1-alpha] (10.05.2021)
+
+### bug fixes
+
+- extension name conflict is resolved. All commands and view are added to the unique namespace
+
 ## [NEXT RELEASE]
