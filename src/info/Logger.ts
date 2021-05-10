@@ -6,7 +6,6 @@ const ERRORS = {
   GithubLoginNotFoundError: 'User github login was not found in the database: $',
   RepoNotFoundError: 'Repository is not found. Check that a git repository is opened.',
   MissingGithubTokenError: 'Missing Github token.',
-  MsRefreshError: 'Something went wrong during refresh. Check you signed in MS corporate account.',
   OwnerSquadNotFoundError: 'Owner squad is not found.',
   NoFirstCommitError: 'No first commit found. Check that a git repository is opened.',
   IncorrectBranchNameError: '"$" is not correct branch name. Name your branch as *branch__upstream*',
