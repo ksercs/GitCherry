@@ -2,7 +2,7 @@
 	"name": "gitcherry",
 	"displayName": "GitCherry",
 	"description": "One-click cherry-picking and pull request creating right in Visual Studio Code",
-	"version": "1.0.1",
+	"version": "1.1.0",
 	"publisher": "ksercs",
 	"icon": "resources/icon.png",
 	"galleryBanner": {

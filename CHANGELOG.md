@@ -26,4 +26,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - regression: [Reviewers are not added to pull request anymore](https://github.com/ksercs/GitCherry/issues/27)
 
+## [v1.1.0-alpha] (10.05.2021)
+
+### bug fixes
+
+- standalone pull requests creating is fixed ([issue](https://github.com/ksercs/GitCherry/issues/35))
+- added `NotStagedChangesFound` error showing when extension tries to check out branch with not staged changes
+
 ## [NEXT RELEASE]
