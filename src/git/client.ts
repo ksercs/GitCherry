@@ -275,8 +275,7 @@ export default class Git {
         await Git.git.checkout(['-b', `${toBranch}`]);
         Logger.logInfo(`now at branch: ${await Git.getBranchName()}`);
       } catch (e) {
-        // TODO: move error to Logger
-        Logger.showError(e.message);
+        Logger.showNotStagedChangesFoundError(e.message.slice(7));
         throw e;
       }
     }

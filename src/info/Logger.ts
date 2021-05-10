@@ -11,7 +11,8 @@ const ERRORS = {
   NoFirstCommitError: 'No first commit found. Check that a git repository is opened.',
   IncorrectBranchNameError: '"$" is not correct branch name. Name your branch as *branch__upstream*',
   NoCommitInBranchError: 'There is no new commits in "$" branch',
-  NoLocalBranchError: 'Branch "$"does not exist. Did you forget to cherry-pick?'
+  NoLocalBranchError: 'Branch "$"does not exist. Did you forget to cherry-pick?',
+  NotStagedChangesFoundError: 'Not staged changes are found. $'
 };
 
 const WARNINGS = {
