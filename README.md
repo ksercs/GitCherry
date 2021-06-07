@@ -1,3 +1,5 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 # GitCherry
 
 [GitCherry](https://github.com/ksercs/GitCherry.git) is an open-source extension for [Visual Studio Code](https://code.visualstudio.com/) created by [Anton Kuznetsov](https://github.com/ksercs) and [Jaan Toming](https://github.com/jtoming830) to automate routine processes of cherry-picking and pull requests creating.
