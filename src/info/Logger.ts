@@ -3,23 +3,21 @@ import log from './log';
 
 const ERRORS = {
   PullRequestCreatingError: 'Pull request from $ to $ was not created! $',
-  GithubLoginNotFoundError: 'User github login was not found in the database: $',
   RepoNotFoundError: 'Repository is not found. Check that a git repository is opened.',
   MissingGithubTokenError: 'Missing Github token.',
-  OwnerSquadNotFoundError: 'Owner squad is not found.',
   NoFirstCommitError: 'No first commit found. Check that a git repository is opened.',
-  IncorrectBranchNameError: '"$" is not correct branch name. Name your branch as *branch__upstream*',
-  NoCommitInBranchError: 'There is no new commits in "$" branch',
-  NoLocalBranchError: 'Branch "$"does not exist. Did you forget to cherry-pick?',
+  IncorrectBranchNameError: '"$" is not a correct branch name. Name your branch as *branch__upstream*',
+  NoCommitInBranchError: 'There is no new commits in "$" branch.',
+  NoLocalBranchError: 'Branch "$" does not exist. Did you forget to cherry-pick?',
   NotStagedChangesFoundError: 'Not staged changes are found. $'
 };
 
 const WARNINGS = {
-  NoUpstreamBranchToCherryPickWarning: 'No upstream branch selected to cherry pick. Current branch is "$".',
+  NoUpstreamBranchToCherryPickWarning: 'No upstream branch selected to cherry pick. Current branch is "$"',
   NotCommitedMergeConflictSolvingWarning: 'Merge conflicts solving is not commited.',
   NotSolvedMergeConflictWarning: 'Please, solve merge conflicts and commit the changes.',
-  MergeConflictDetectedWarning: `Merge conflict on branch $ is detected. 
-  Please, solve it, commit and press "Continue cherry-pick" button.`,
+  MergeConflictDetectedWarning: `Merge conflict on branch "$" is detected. 
+Please, solve it, commit and press "Continue cherry-pick" button.`,
   SeveralSeparatorsWarning: 'Branch name includes several "__". Branch name: "$", upstream branch name: "$"'
 };
 
@@ -69,6 +67,7 @@ const Logger: any = {
   },
 
   showPullRequestCreatingMessage: (msg: string, url: string) => {
+    Logger.logInfo(`${msg}: ${url}`);
     window.showInformationMessage(msg, 'Open').then(() => {
       env.openExternal(Uri.parse(url));
     });
