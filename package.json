@@ -6,21 +6,24 @@
 	"publisher": "ksercs",
 	"icon": "resources/icon.png",
 	"galleryBanner": {
-	  "color": "#BB09B2"
+		"color": "#BB09B2"
 	},
 	"author": {
-		"name" : "Anton Kuznetsov",
-		"email" : "ksercs0@gmail.com",
-		"url" : "http://github.com/ksercs"
+		"name": "Anton Kuznetsov",
+		"email": "ksercs0@gmail.com",
+		"url": "http://github.com/ksercs"
 	},
-	"contributors": [{
-		"name" : "Anton Kuznetsov",
-		"email" : "ksercs0@gmail.com",
-		"url" : "http://github.com/ksercs"
-	}, {
-		"name" : "Jaan Toming",
-		"url" : "http://github.com/jtoming830"
-	}],
+	"contributors": [
+		{
+			"name": "Anton Kuznetsov",
+			"email": "ksercs0@gmail.com",
+			"url": "http://github.com/ksercs"
+		},
+		{
+			"name": "Jaan Toming",
+			"url": "http://github.com/jtoming830"
+		}
+	],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/ksercs/GitCherry.git"
@@ -30,7 +33,13 @@
 		"email": "ksercs0@gmail.com"
 	},
 	"homepage": "https://github.com/ksercs/GitCherry/blob/master/README.md",
-	"keywords": ["git", "cherry", "pull request", "cherry-pick", "pull-request"],
+	"keywords": [
+		"git",
+		"cherry",
+		"pull request",
+		"cherry-pick",
+		"pull-request"
+	],
 	"preview": true,
 	"engines": {
 		"vscode": "^1.50.0"
@@ -138,18 +147,27 @@
 		"lint": "eslint src --ext ts --fix",
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile && npm run lint",
-		"test": "node ./out/test/runTest.js",
+		"test": "node ./out/testing/runTest.js",
 		"package": "vsce package --out=./bundles"
 	},
 	"devDependencies": {
+		"@octokit/types": "^5.5.0",
+		"@types/chai": "^4.2.18",
 		"@types/glob": "^7.1.3",
 		"@types/mocha": "^8.0.0",
+		"@types/sinon": "^10.0.2",
 		"@types/vscode": "^1.50.0",
+		"@typescript-eslint/eslint-plugin": "^4.26.1",
 		"@typescript-eslint/parser": "^4.8.2",
-		"@octokit/types": "^5.5.0",
+		"chai": "^4.3.4",
 		"eslint": "^7.14.0",
+		"eslint-config-standard": "^16.0.3",
+		"eslint-plugin-import": "^2.23.4",
+		"eslint-plugin-node": "^11.1.0",
+		"eslint-plugin-promise": "^5.1.0",
 		"glob": "^7.1.6",
 		"mocha": "^8.1.3",
+		"sinon": "^11.1.1",
 		"typescript": "^4.0.2",
 		"vscode-test": "^1.4.0"
 	},
