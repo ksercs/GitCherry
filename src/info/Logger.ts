@@ -18,7 +18,8 @@ const WARNINGS = {
   NotSolvedMergeConflictWarning: 'Please, solve merge conflicts and commit the changes.',
   MergeConflictDetectedWarning: `Merge conflict on branch "$" is detected. 
 Please, solve it, commit and press "Continue cherry-pick" button.`,
-  SeveralSeparatorsWarning: 'Branch name includes several "__". Branch name: "$", upstream branch name: "$"'
+  SeveralSeparatorsWarning: 'Branch name includes several "__". Branch name: "$", upstream branch name: "$"',
+  ManualBranchChangeDetectedWarning: 'You manually checked out the branch during cherry-picking. Cherry picking to branches $ is aborted.'
 };
 
 const prepareMessage = (msg: string, args: string[]) => {
