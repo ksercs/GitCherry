@@ -79,7 +79,6 @@ Object.entries(ERRORS).forEach(([name, templateMessage]) => {
   Logger[`show${name}`] = (...args: string[]) => {
     const msg: string = prepareMessage(templateMessage, args);
 
-    Logger.logError(msg);
     Logger.showError(msg);
   };
 });
@@ -88,7 +87,6 @@ Object.entries(WARNINGS).forEach(([name, templateMessage]) => {
   Logger[`show${name}`] = (...args: string[]) => {
     const msg: string = prepareMessage(templateMessage, args);
 
-    Logger.logWarning(msg);
     Logger.showWarning(msg);
   };
 });
