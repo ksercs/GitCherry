@@ -14,12 +14,14 @@ export default class Git {
       upstreams: string[],
       firstCommit: string,
       lastCommit: string,
-      isAborted: boolean
+      isAborted: boolean,
+      currentBranchToCherryPick: string
     } = {
       upstreams: [],
       firstCommit: '',
       lastCommit: '',
-      isAborted: false
+      isAborted: false,
+      currentBranchToCherryPick: ''
     };
 
     public static async init () {
@@ -55,10 +57,19 @@ export default class Git {
 
     public static async abortCherryPicking () {
       const currentBranch = await Git.getBranchName();
-      Logger.showInfo(`Cherry picking to ${currentBranch} is aborted.`);
+      if (currentBranch !== Git.cherryState.currentBranchToCherryPick) {
+        await Git.isMergeConflict(false);
+        Logger.showManualBranchChangeDetectedWarning([
+          Git.cherryState.currentBranchToCherryPick,
+          ...Git.cherryState.upstreams.map(b => `${Git.localBranch}__${b}`)
+        ]);
+        return;
+      }
+
       await Git.git.raw(['cherry-pick', '--abort']);
       await Git.isMergeConflict(false);
       Git.cherryState.isAborted = true;
+      Logger.showInfo(`Cherry picking to ${Git.cherryState.currentBranchToCherryPick} is aborted.`);
       await Git.cherryPickToNextUpstream();
     }
 
@@ -112,6 +123,12 @@ export default class Git {
     }
 
     public static async continueCherryPick () {
+      const currentBranch = await Git.getBranchName();
+      if (currentBranch !== Git.cherryState.currentBranchToCherryPick) {
+        Git.abortCherryPicking();
+        return;
+      }
+
       Logger.logInfo('continue cherry-pick');
       try {
         Logger.logInfo('git cherry-pick --continue');
@@ -167,7 +184,7 @@ export default class Git {
       const currentBranch = await Git.getBranchName();
 
       if (currentBranch !== startBranchName && !Git.cherryState.isAborted) {
-        Logger.showInfo(`Cherry picked successfully to branch "${currentBranch}".`);
+        Logger.showInfo(`Cherry picked successfully to branch "${Git.cherryState.currentBranchToCherryPick}".`);
       }
       Git.cherryState.isAborted = false;
 
@@ -183,6 +200,7 @@ export default class Git {
 
       Logger.logInfo(`start cherry-picking to ${upstreamBranch}`);
       try {
+        Git.cherryState.currentBranchToCherryPick = `${Git.localBranch}__${upstreamBranch}`;
         await Git.branchOut(Git.localBranch, upstreamBranch);
         await Git.cherryPick(Git.cherryState.firstCommit, Git.cherryState.lastCommit);
       } catch (e) {
