@@ -174,13 +174,6 @@ describe('Logger', function () {
 
       checkErrors(expectedMessage);
     });
-
-    test('NotStagedChangesFoundError', () => {
-      Logger.showNotStagedChangesFoundError('Something went wrong');
-      const expectedMessage = 'Not staged changes are found. Something went wrong';
-
-      checkErrors(expectedMessage);
-    });
   });
 
   describe('special warnings', function () {

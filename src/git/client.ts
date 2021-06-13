@@ -15,13 +15,15 @@ export default class Git {
       firstCommit: string,
       lastCommit: string,
       isAborted: boolean,
-      currentBranchToCherryPick: string
+      currentBranchToCherryPick: string,
+      isChangesStashed: boolean
     } = {
       upstreams: [],
       firstCommit: '',
       lastCommit: '',
       isAborted: false,
-      currentBranchToCherryPick: ''
+      currentBranchToCherryPick: '',
+      isChangesStashed: false
     };
 
     public static async init () {
@@ -59,10 +61,12 @@ export default class Git {
       const currentBranch = await Git.getBranchName();
       if (currentBranch !== Git.cherryState.currentBranchToCherryPick) {
         await Git.isMergeConflict(false);
+        const additionalNote = Git.cherryState.isChangesStashed ? 'NOTE: not staged changes were stashed before cherry pick. Please, run "git stash apply" manually.' : '';
         Logger.showManualBranchChangeDetectedWarning([
           Git.cherryState.currentBranchToCherryPick,
           ...Git.cherryState.upstreams.map(b => `${Git.localBranch}__${b}`)
-        ]);
+        ], additionalNote);
+        Git.cherryState.isChangesStashed = false;
         return;
       }
 
@@ -125,7 +129,7 @@ export default class Git {
     public static async continueCherryPick () {
       const currentBranch = await Git.getBranchName();
       if (currentBranch !== Git.cherryState.currentBranchToCherryPick) {
-        Git.abortCherryPicking();
+        await Git.abortCherryPicking();
         return;
       }
 
@@ -135,7 +139,7 @@ export default class Git {
         await Git.git.raw(['cherry-pick', '--continue']);
         Logger.logInfo('merge conflict is solved');
         await Git.isMergeConflict(false);
-        Git.cherryPickToNextUpstream();
+        await Git.cherryPickToNextUpstream();
       } catch (e) {
         Logger.logError(e);
         const message = e.message;
@@ -155,7 +159,7 @@ export default class Git {
         } else {
           Logger.logInfo('merge conflict is solved');
           await Git.isMergeConflict(false);
-          Git.cherryPickToNextUpstream();
+          await Git.cherryPickToNextUpstream();
         }
       }
     }
@@ -190,7 +194,10 @@ export default class Git {
 
       if (upstreamsCount === 0) {
         if (currentBranch !== startBranchName) {
-          Git.checkoutBack();
+          await Git.checkoutBack();
+          if (Git.cherryState.isChangesStashed) {
+            await Git.stash({ apply: true });
+          }
         }
         return;
       }
@@ -285,16 +292,33 @@ export default class Git {
         Logger.logInfo(`no local branch ${toBranch}`);
       }
 
-      try {
-        await Git.fetch(upstreamBranch);
+      await Git.fetch(upstreamBranch);
+
+      const createNewBranch = async () => {
         Logger.logInfo(`git checkout ${Git.remote}/${upstreamBranch}`);
         await Git.git.checkout(`${Git.remote}/${upstreamBranch}`);
         Logger.logInfo(`git checkout -b ${toBranch}`);
         await Git.git.checkout(['-b', `${toBranch}`]);
         Logger.logInfo(`now at branch: ${await Git.getBranchName()}`);
+      };
+      try {
+        await createNewBranch();
       } catch (e) {
-        Logger.showNotStagedChangesFoundError(e.message.slice(7));
-        throw e;
+        Logger.logError(e.message);
+        await Git.stash();
+        await createNewBranch();
+      }
+    }
+
+    private static async stash ({ apply }: {apply: boolean} = { apply: false }) {
+      if (apply) {
+        Logger.logInfo('git stash apply');
+        await Git.git.stash(['apply']);
+        Git.cherryState.isChangesStashed = false;
+      } else {
+        Logger.logInfo('git stash');
+        await Git.git.stash();
+        Git.cherryState.isChangesStashed = true;
       }
     }
 
@@ -307,7 +331,7 @@ export default class Git {
           Logger.logInfo(`git cherry-pick ${firstCommit}^..${lastCommit}`);
           await Git.git.raw(['cherry-pick', `${firstCommit}^..${lastCommit}`]);
         }
-        Git.cherryPickToNextUpstream();
+        await Git.cherryPickToNextUpstream();
       } catch (e) {
         Logger.logError(e);
         await Git.solveCherryPickProblem(!e.message.includes('CONFLICT'));
@@ -319,7 +343,7 @@ export default class Git {
         Logger.logInfo('skip commit');
         try {
           await Git.git.raw(['cherry-pick', '--skip']);
-          Git.cherryPickToNextUpstream();
+          await Git.cherryPickToNextUpstream();
         } catch (e) {
           Logger.logError(e);
           await Git.solveCherryPickProblem(!e.message.includes('CONFLICT'));
