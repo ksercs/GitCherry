@@ -14,15 +14,16 @@ async function pushAndCreatePullRequests (payload: TreePayload) {
 
   for (let i = 0; i < upstreams.length; ++i) {
     const upstreamBranch = upstreams[i];
+    const toBranch = `${localBranch}__${upstreamBranch}`;
 
     try {
-      await Git.checkOut(localBranch, upstreamBranch);
+      await Git.checkOut(toBranch);
       await Git.push();
       await createPullRequest(payload, upstreamBranch);
     } catch (e) {
       Logger.logError(e);
       if (e.message.includes('did not match any file')) {
-        Logger.showNoLocalBranchError(`${localBranch}__${upstreamBranch}`);
+        Logger.showNoLocalBranchError(toBranch);
       }
     }
   };

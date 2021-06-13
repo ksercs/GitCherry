@@ -119,10 +119,24 @@ export default class Git {
       await Git.git.push('origin', currentBranch);
     }
 
-    public static async checkOut (localBranch: string, upstreamBranch: string) {
-      const toBranch = `${localBranch}__${upstreamBranch}`;
-      Logger.logInfo(`git checkout ${toBranch}`);
-      await Git.git.checkout(`${toBranch}`);
+    public static async checkOut (toBranch: string, { createNew }: {createNew: boolean} = { createNew: false }) {
+      try {
+        if (createNew) {
+          Logger.logInfo(`git checkout -b ${toBranch}`);
+          await Git.git.checkout(['-b', toBranch]);
+        } else {
+          Logger.logInfo(`git checkout ${toBranch}`);
+          await Git.git.checkout(toBranch);
+        }
+      } catch (e) {
+        if (e.message.includes('stash')) {
+          Logger.logError(e.message);
+          await Git.stash();
+          await Git.checkOut(toBranch, { createNew });
+        } else {
+          throw e;
+        }
+      }
       Logger.logInfo(`now at branch: ${await Git.getBranchName()}`);
     }
 
@@ -165,8 +179,12 @@ export default class Git {
     }
 
     public static async checkoutBack () {
-      Logger.logInfo(`checkout back to ${Git.localBranch}__${Git.upstreamBranch}`);
-      await Git.checkOut(Git.localBranch, Git.upstreamBranch);
+      const toBranch = `${Git.localBranch}__${Git.upstreamBranch}`;
+      Logger.logInfo(`checkout back to ${toBranch}`);
+      await Git.checkOut(toBranch);
+      if (Git.cherryState.isChangesStashed) {
+        await Git.stash({ apply: true });
+      }
     }
 
     // private
@@ -195,9 +213,6 @@ export default class Git {
       if (upstreamsCount === 0) {
         if (currentBranch !== startBranchName) {
           await Git.checkoutBack();
-          if (Git.cherryState.isChangesStashed) {
-            await Git.stash({ apply: true });
-          }
         }
         return;
       }
@@ -283,10 +298,9 @@ export default class Git {
 
     private static async branchOut (localBranch: string, upstreamBranch: string) {
       const toBranch = `${localBranch}__${upstreamBranch}`;
+      const fromFullUpstreamBranch = `${Git.remote}/${upstreamBranch}`;
       try {
-        await Git.git.checkout(toBranch);
-        Logger.logInfo(`git checkout ${toBranch}`);
-        Logger.logInfo(`now at branch: ${await Git.getBranchName()}`);
+        await Git.checkOut(toBranch);
         return;
       } catch (e) {
         Logger.logInfo(`no local branch ${toBranch}`);
@@ -294,20 +308,8 @@ export default class Git {
 
       await Git.fetch(upstreamBranch);
 
-      const createNewBranch = async () => {
-        Logger.logInfo(`git checkout ${Git.remote}/${upstreamBranch}`);
-        await Git.git.checkout(`${Git.remote}/${upstreamBranch}`);
-        Logger.logInfo(`git checkout -b ${toBranch}`);
-        await Git.git.checkout(['-b', `${toBranch}`]);
-        Logger.logInfo(`now at branch: ${await Git.getBranchName()}`);
-      };
-      try {
-        await createNewBranch();
-      } catch (e) {
-        Logger.logError(e.message);
-        await Git.stash();
-        await createNewBranch();
-      }
+      await Git.checkOut(fromFullUpstreamBranch);
+      await Git.checkOut(toBranch, { createNew: true });
     }
 
     private static async stash ({ apply }: {apply: boolean} = { apply: false }) {
