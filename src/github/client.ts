@@ -46,6 +46,12 @@ export default class GithubClient {
       return getData(await GithubClient.octokit.issues.listLabelsForRepo(GithubClient.repoData)) as LabelsDataType;
     }
 
+    static async getContributorName (username: string): Promise<string | null> {
+      const info = await GithubClient.octokit.users.getByUsername({ username });
+
+      return info.data.name;
+    }
+
     static async getReviewers (): Promise<ReviewersDataType> {
       const getDataFromPage = async (page: number) => {
         return getData(await GithubClient.octokit.repos.listCollaborators(Object.assign({}, GithubClient.repoData, { per_page: 100, page }))) || [];

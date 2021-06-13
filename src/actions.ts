@@ -70,11 +70,11 @@ export class Action {
   }
 
   static async onRefresh (treeDataProvider: TreeDataProvider) {
-    Logger.logInfo('Start refreshing');
-    treeDataProvider.tree = await TreeCreator.createTree();
+    Logger.showInfo('Start TreeView refreshing. Please, wait');
+    treeDataProvider.tree = await TreeCreator.createTree(true);
     Logger.logInfo('Tree is created');
     treeDataProvider.refresh();
-    Logger.logInfo('Tree is refreshed');
+    Logger.showInfo('TreeView is refreshed successfully.');
   }
 
   static async onContinue () {

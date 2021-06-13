@@ -1,5 +1,9 @@
 import { ExtendedTreeItem, REVIEWERS_ROOT_LABEL, LABELS_ROOT_LABEL, UPSTREAM_ROOT_LABEL } from './item';
 import GithubClient from '../github/client';
+import { getReviewersPayload } from './getReviewersPayload';
+
+const LABELS_TO_SKIP: string[] = [];
+const BRANCHES_TO_SKIP: string[] = [];
 
 export default class TreeCreator {
   private static createTreeItem (rootLabel: string, data: any[], nameKey: string = 'name', expanded: boolean = true): ExtendedTreeItem {
@@ -19,11 +23,14 @@ export default class TreeCreator {
     return this.createTreeItem(UPSTREAM_ROOT_LABEL, branches);
   }
 
-  static async createTree (): Promise<ExtendedTreeItem[]> {
-    const branches = await GithubClient.getBranches();
-    const labels = await GithubClient.getLabels();
-    const { login } = await GithubClient.getUser();
-    const reviewers = (await GithubClient.getReviewers()).filter((reviewer: { login: string }) => reviewer.login !== login);
+  static async createTree (ignoreCache?: boolean): Promise<ExtendedTreeItem[]> {
+    const branches = (await GithubClient.getBranches()).filter(({ name }: {name: string}) => {
+      return BRANCHES_TO_SKIP.indexOf(name) === -1;
+    }); ;
+    const labels = (await GithubClient.getLabels()).filter(({ name }: {name: string}) => {
+      return LABELS_TO_SKIP.indexOf(name) === -1;
+    });
+    const reviewers = await getReviewersPayload(ignoreCache);
 
     return [new ExtendedTreeItem('Pull request settings', [
       await TreeCreator.createBranchesTree(branches),
