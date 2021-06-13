@@ -14,6 +14,7 @@ export class ExtendedTreeItem extends TreeItem {
     super(label, state);
     this.children = children;
     this.selected = false;
+    this.contextValue = children ? 'expandable' : '';
   }
 
   setIcon () {

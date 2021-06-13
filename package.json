@@ -110,6 +110,14 @@
 					"light": "resources/light/abort.svg",
 					"dark": "resources/dark/abort.svg"
 				}
+			},
+			{
+				"command": "GitCherry.unselect_all",
+				"title": "Unselect all",
+				"icon": {
+					"light": "resources/light/uncheck_all.svg",
+					"dark": "resources/dark/uncheck_all.svg"
+				}
 			}
 		],
 		"menus": {
@@ -138,6 +146,13 @@
 					"command": "GitCherry.cherry_pick",
 					"group": "navigation",
 					"when": "view == GitCherry.main && isMergeConflict == false"
+				}
+			],
+			"view/item/context": [
+				{
+				  "command": "GitCherry.unselect_all",
+				  "when": "view == GitCherry.main && viewItem == expandable",
+				  "group": "inline"
 				}
 			]
 		}
