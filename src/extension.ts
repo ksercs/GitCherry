@@ -15,4 +15,5 @@ export async function activate () {
   commands.registerCommand('GitCherry.refresh', () => Action.onRefresh(treeDataProvider));
   commands.registerCommand('GitCherry.continue', () => Action.onContinue());
   commands.registerCommand('GitCherry.abort_cherry_pick', () => Action.onAbortCherryPick());
+  commands.registerCommand('GitCherry.unselect_all', () => treeDataProvider.unselectAll(treeDataProvider.tree[0]));
 }
