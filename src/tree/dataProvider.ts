@@ -59,15 +59,19 @@ export default class TreeDataProvider implements vscode.TreeDataProvider<Extende
     return Promise.resolve(element.children);
   }
 
-  unselectAll (element: ExtendedTreeItem) {
+  unselectItem (element: ExtendedTreeItem) {
     if (!element.children) {
       element.selected = false;
-      this.refresh(element);
       return;
     }
 
     element.children.forEach(element => {
-      this.unselectAll(element);
+      this.unselectItem(element);
     });
+  }
+
+  unselectAll (element: ExtendedTreeItem) {
+    this.unselectItem(element);
+    this.refresh();
   }
 }

@@ -9,7 +9,7 @@ export async function activate () {
   await Git.init();
   await GithubClient.init();
 
-  window.registerTreeDataProvider('GitCherry.main', treeDataProvider);
+  window.createTreeView('GitCherry.main', { treeDataProvider, showCollapseAll: true });
   commands.registerCommand('GitCherry.pull_request', () => Action.onPullRequest(treeDataProvider));
   commands.registerCommand('GitCherry.cherry_pick', () => Action.onCherryPick(treeDataProvider));
   commands.registerCommand('GitCherry.refresh', () => Action.onRefresh(treeDataProvider));
