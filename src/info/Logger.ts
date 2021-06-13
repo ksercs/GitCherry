@@ -8,8 +8,7 @@ const ERRORS = {
   NoFirstCommitError: 'No first commit found. Check that a git repository is opened.',
   IncorrectBranchNameError: '"$" is not a correct branch name. Name your branch as *branch__upstream*',
   NoCommitInBranchError: 'There is no new commits in "$" branch.',
-  NoLocalBranchError: 'Branch "$" does not exist. Did you forget to cherry-pick?',
-  NotStagedChangesFoundError: 'Not staged changes are found. $'
+  NoLocalBranchError: 'Branch "$" does not exist. Did you forget to cherry-pick?'
 };
 
 const WARNINGS = {
@@ -19,7 +18,7 @@ const WARNINGS = {
   MergeConflictDetectedWarning: `Merge conflict on branch "$" is detected. 
 Please, solve it, commit and press "Continue cherry-pick" button.`,
   SeveralSeparatorsWarning: 'Branch name includes several "__". Branch name: "$", upstream branch name: "$"',
-  ManualBranchChangeDetectedWarning: 'You manually checked out the branch during cherry-picking. Cherry picking to branches $ is aborted.'
+  ManualBranchChangeDetectedWarning: 'You manually checked out the branch during cherry-picking. Cherry picking to branches $ is aborted. $'
 };
 
 const prepareMessage = (msg: string, args: string[]) => {
