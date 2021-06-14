@@ -1,3 +1,4 @@
+[![](https://vsmarketplacebadge.apphb.com/version-short/ksercs.gitcherry.svg)](https://marketplace.visualstudio.com/items?itemName=ksercs.gitcherry)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # GitCherry
