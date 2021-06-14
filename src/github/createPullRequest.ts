@@ -1,6 +1,6 @@
 import GithubClient from './client';
 import Git from '../git/client';
-import Logger from '../info/logger';
+import Logger from '../info/Logger';
 import { TreePayload } from '../tree/payload';
 
 async function createPullRequest ({ title, description, labels, reviewers }: TreePayload, upstreamBranch: string) {

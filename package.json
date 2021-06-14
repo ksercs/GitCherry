@@ -6,7 +6,7 @@
 	"publisher": "ksercs",
 	"icon": "resources/icon.png",
 	"galleryBanner": {
-		"color": "#BB09B2"
+		"color": "#3D27A2"
 	},
 	"author": {
 		"name": "Anton Kuznetsov",
@@ -150,9 +150,9 @@
 			],
 			"view/item/context": [
 				{
-				  "command": "GitCherry.unselect_all",
-				  "when": "view == GitCherry.main && viewItem == expandable",
-				  "group": "inline"
+					"command": "GitCherry.unselect_all",
+					"when": "view == GitCherry.main && viewItem == expandable",
+					"group": "inline"
 				}
 			]
 		}
@@ -163,7 +163,10 @@
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile && npm run lint",
 		"test": "node ./out/testing/runTest.js",
-		"package": "vsce package --out=./bundles"
+		"package": "vsce package --out=./bundles",
+		"prepackage": "rm -r ./out && npm run webpack:prod",
+		"webpack:prod": "webpack --mode production",
+		"webpack": "webpack --watch --mode development"
 	},
 	"devDependencies": {
 		"@octokit/types": "^5.5.0",
@@ -175,16 +178,22 @@
 		"@typescript-eslint/eslint-plugin": "^4.26.1",
 		"@typescript-eslint/parser": "^4.8.2",
 		"chai": "^4.3.4",
+		"copy-webpack-plugin": "^9.0.0",
 		"eslint": "^7.14.0",
 		"eslint-config-standard": "^16.0.3",
 		"eslint-plugin-import": "^2.23.4",
 		"eslint-plugin-node": "^11.1.0",
 		"eslint-plugin-promise": "^5.1.0",
 		"glob": "^7.1.6",
+		"license-webpack-plugin": "^2.3.19",
 		"mocha": "^8.1.3",
+		"path": "^0.12.7",
 		"sinon": "^11.1.1",
+		"ts-loader": "^9.2.3",
 		"typescript": "^4.0.2",
-		"vscode-test": "^1.4.0"
+		"vscode-test": "^1.4.0",
+		"webpack": "^5.38.1",
+		"webpack-cli": "^4.7.2"
 	},
 	"dependencies": {
 		"@octokit/rest": "^18.0.9",

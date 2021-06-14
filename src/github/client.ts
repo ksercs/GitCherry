@@ -1,7 +1,7 @@
 import { Octokit } from '@octokit/rest';
 import { OctokitResponse } from '@octokit/types';
 import { authentication, AuthenticationSession } from 'vscode';
-import Logger from '../info/logger';
+import Logger from '../info/Logger';
 import {
   GetResponseDataType,
   LabelsDataType,

@@ -1,6 +1,6 @@
 import simpleGit, { SimpleGit } from 'simple-git';
 import { workspace, commands } from 'vscode';
-import Logger from '../info/logger';
+import Logger from '../info/Logger';
 import { GITHUB_HTTPS_URL_REGEX, GITHUB_SSH_URL_REGEX, BRANCH_REGEX } from './constants';
 import { RepoDataType } from '../github/types';
 

@@ -11,11 +11,11 @@ export async function activate (context: ExtensionContext) {
   await GithubClient.init();
   Storage.setStorage(context.globalState);
 
-  window.createTreeView('GitCherry.main', { treeDataProvider, showCollapseAll: true });
-  commands.registerCommand('GitCherry.pull_request', () => Action.onPullRequest(treeDataProvider));
-  commands.registerCommand('GitCherry.cherry_pick', () => Action.onCherryPick(treeDataProvider));
-  commands.registerCommand('GitCherry.refresh', () => Action.onRefresh(treeDataProvider));
-  commands.registerCommand('GitCherry.continue', () => Action.onContinue());
-  commands.registerCommand('GitCherry.abort_cherry_pick', () => Action.onAbortCherryPick());
-  commands.registerCommand('GitCherry.unselect_all', (item) => treeDataProvider.unselectAll(item));
+  window.createTreeView('TestGitCherry.main', { treeDataProvider, showCollapseAll: true });
+  commands.registerCommand('TestGitCherry.pull_request', () => Action.onPullRequest(treeDataProvider));
+  commands.registerCommand('TestGitCherry.cherry_pick', () => Action.onCherryPick(treeDataProvider));
+  commands.registerCommand('TestGitCherry.refresh', () => Action.onRefresh(treeDataProvider));
+  commands.registerCommand('TestGitCherry.continue', () => Action.onContinue());
+  commands.registerCommand('TestGitCherry.abort_cherry_pick', () => Action.onAbortCherryPick());
+  commands.registerCommand('TestGitCherry.unselect_all', (item) => treeDataProvider.unselectAll(item));
 }
