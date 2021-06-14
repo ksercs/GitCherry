@@ -36,17 +36,15 @@ export class ExtendedTreeItem extends TreeItem {
   }
 
   getSelectedChildrenLabelsArray (): string[] {
-    let nodes = [] as Array<ExtendedTreeItem>;
+    const nodes = [] as Array<ExtendedTreeItem>;
 
     this.children?.forEach(child => {
       if (child.children) {
         nodes.push(...child.children);
+      } else {
+        nodes.push(child);
       }
     });
-
-    if (nodes.length === 0) {
-      nodes = this.children ?? [];
-    }
 
     return nodes?.filter(node => node.selected).map(node => node.label as string);
   }
