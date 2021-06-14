@@ -1,6 +1,6 @@
 .vscode/**
 .vscode-test/**
-out/test/**
+out/testing/**
 src/**
 .gitignore
 .yarnrc
@@ -9,3 +9,7 @@ vsc-extension-quickstart.md
 **/.eslintrc.json
 **/*.map
 **/*.ts
+./package-lock.json
+node_modules/**
+gifs/**
+bundles/**

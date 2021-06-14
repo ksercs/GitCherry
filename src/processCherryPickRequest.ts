@@ -1,6 +1,6 @@
 import Git from './git/client';
 import { TreePayload } from './tree/payload';
-import Logger from './info/logger';
+import Logger from './info/Logger';
 
 async function processCherryPickRequest (payload: TreePayload) {
   Logger.logInfo('start cherry picking');

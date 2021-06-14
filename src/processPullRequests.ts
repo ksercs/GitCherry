@@ -1,7 +1,7 @@
 import Git from './git/client';
 import { createPullRequest } from './github/createPullRequest';
 import { TreePayload } from './tree/payload';
-import Logger from './info/logger';
+import Logger from './info/Logger';
 
 async function pushAndCreatePullRequests (payload: TreePayload) {
   Logger.logInfo('start pull requests creating');

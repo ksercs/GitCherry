@@ -3,7 +3,7 @@ import { describe, test, beforeEach, afterEach } from 'mocha';
 import * as sinon from 'sinon';
 import * as vs from 'vscode';
 
-import Logger from '../../info/logger';
+import Logger from '../../info/Logger';
 import log from '../../info/log';
 
 describe('Logger', function () {
